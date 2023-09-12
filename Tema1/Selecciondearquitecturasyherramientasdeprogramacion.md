@@ -85,8 +85,6 @@ Hay que diferenciar entre:
 * Lenguajes de programación del lado del cliente.
 * Lenguajes	de	programación del lado del lado del servidor o lenguajes scripting.
 
-<div class="page"/>
-
 ### Del lado del cliente
 
 * __HTML__: solo presenta texto en una página, además de definir algunos aspectos visuales en el documento mediante el uso de estilos.
