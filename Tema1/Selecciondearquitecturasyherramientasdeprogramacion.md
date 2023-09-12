@@ -65,6 +65,9 @@ Las cuatro capas típicas en una arquitectura de cuatro capas son las siguientes
 
 Con los microservicios, actualmente se puede llegar a arquitecturas hexagonales con hasta seis capas diferentes. Más información sobre [la arquitectura hexagonal](https://openwebinars.net/blog/que-es-la-arquitectura-hexagonal/)
 
+
+<div class="page"/>
+
 ## Tipos de aplicaciones web
 Podemos dividir las __aplicaciones web__ en:
 * __Estáticas__: el usuario recibe una página web cuya interacción no conlleva ningún tipo de acción, ni en la propia página, ni genera respuesta alguna por parte del servidor. Usan lenguaje HTML exclusivamente. Es la web 1.0 duró aproximadamente ocho años hasta la aparición del html 4.0 en 1988.
