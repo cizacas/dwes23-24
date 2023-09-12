@@ -42,8 +42,8 @@ Las aplicaciones cliente-servidor están divididas en dos niveles o capas. Ambas
 Por ejemplo, el protocolo DNS es un serviciode ua base de datos distribuida que contiene información de cada dominio. Su función principal es dar la IP pública de un dominio. Su gestión está delegada sobre diferentes empresas a nivel mundial. En el mundo, hay miles de servidores DNS escuchando por su puerto 53(a través de TCP o UDP) las peticiones de los millones de clientes que requieran conocer la IP pública del dominio al que quieren acceder para encontrar dicho servidor web.
 * __El servidor web__ es un proceso pasivo, ya que solo contesta si algún cliente le solicita algún recurso. Dichas solicitudes llegan, mayoritariamente, a través de los protocolos HTTP/HTTPS
 Los servidores web más utilizados son:
-* Privativos: Internet Information Services (IIS) de Microsoft, o el WebLogicServer de Oracle.
-* Proyectos de código abierto (open source): Servidor Apache, el Lighttpd o NginX.
+  * Privativos: Internet Information Services (IIS) de Microsoft, o el WebLogicServer de Oracle.
+  * Proyectos de código abierto (open source): Servidor Apache, el Lighttpd o NginX.
 
 * __La capa cliente__ es un proceso activo, que son los consumidores de servicios de la parte servidora. El usuario interactuará a través de las aplicaciones web, para ir pidiendo la información que va necesitando visualizar en cada momento.
 
@@ -61,15 +61,15 @@ Las cuatro capas típicas en una arquitectura de cuatro capas son las siguientes
 
 * __Capa de servicios o negocio__: Esta capa actúa como intermediario entre la capa de control y la capa de datos. Contiene la lógica de negocio de la aplicación, realiza cálculos, procesa datos y coordina la interacción entre múltiples modelos o componentes de datos. Puede proporcionar servicios reutilizables para la aplicación.
 
-*__Capa de datos__: En esta capa se gestionan los datos y la interacción con el almacenamiento de datos. Puede incluir bases de datos, sistemas de archivos, servicios web, API, etc. Esta capa se encarga de la persistencia y recuperación de datos.
+* __Capa de datos__: En esta capa se gestionan los datos y la interacción con el almacenamiento de datos. Puede incluir bases de datos, sistemas de archivos, servicios web, API, etc. Esta capa se encarga de la persistencia y recuperación de datos.
 
 Con los microservicios, actualmente se puede llegar a arquitecturas hexagonales con hasta seis capas diferentes. Más información sobre [la arquitectura hexagonal](https://openwebinars.net/blog/que-es-la-arquitectura-hexagonal/)
 
 ## Tipos de aplicaciones web
 Podemos dividir las __aplicaciones web__ en:
-* __Estáticas__: el usuario recibe una página web cuya interacción no conlleva  ningún tipo de acción, ni en la propia página, ni genera respuesta  alguna por parte del servidor. Usan lenguaje HTML exclusivamente. Es la web 1.0 duró aproximadamente ocho años hasta la aparición del html 4.0 en 1988.
+* __Estáticas__: el usuario recibe una página web cuya interacción no conlleva ningún tipo de acción, ni en la propia página, ni genera respuesta alguna por parte del servidor. Usan lenguaje HTML exclusivamente. Es la web 1.0 duró aproximadamente ocho años hasta la aparición del html 4.0 en 1988.
   
-* __Dinámicas__: la interacción del cliente con el recurso recibido por parte  del servidor (página web) produce algún tipo de cambio en la  visualización del mismo (cambios de formato, ocultación de partes del  documento, creación de elementos nuevos, etc.). Los lenguajes  involucrados en este tipo de aplicaciones incluyen, entre otros, HTML,  CSS o JavaScript. Es la web 1.5 dinámicas se utilizaron durante seis años, hasta 2003. Estaban escritas en lenguajes de programación del lado servidor como PHP, ASP.net o JSP, que se ejecutan en el servidor de aplicaciones web.
+* __Dinámicas__: la interacción del cliente con el recurso recibido por parte  del servidor (página web) produce algún tipo de cambio en la  visualización del mismo (cambios de formato, ocultación de partes del documento, creación de elementos nuevos, etc.). Los lenguajes  involucrados en este tipo de aplicaciones incluyen, entre otros, HTML, CSS o JavaScript. Es la web 1.5 dinámicas se utilizaron durante seis años, hasta 2003. Estaban escritas en lenguajes de programación del lado servidor como PHP, ASP.net o JSP, que se ejecutan en el servidor de aplicaciones web.
 El servidor web procesará la petición e irá construyendo la página web en HTML de forma dinámica para contestar al cliente.
 ![imagen url](img/direccionpagina.png). 
 Las páginas web dinámicas se personalizan y adaptan la información que muestran a partir de la información recibida en la misma petición o mediante consultas a bases de datos. Lo habitual será que una misma página devuelva resultados diferentes para usuarios diferentes, según los parámetros recibidos.
@@ -177,17 +177,17 @@ Existen múltiples alternativas:
 
 ## Integración con los servidores web
 * Los clientes hacen peticiones a los servidores.
-    * En	ellas	tienen	que	constar	de	unos	elementos	concretos	y  especificados en un orden determinado.
-    *   Las	direcciones	de	las	peticiones	suelen	ser	de	tipo URL(Localizador Uniforme de Recurso):
-        * Cadena de texto que se utiliza para identificar un recurso y además  nos da información sobre como acceder a él, como localizarlo.
+    * En ellas tienen que constar de unos elementos	concretos y especificados en un orden determinado.
+    *   Las	direcciones	de las peticiones suelen ser de	tipo URL(Localizador Uniforme de Recurso):
+        * Cadena de texto que se utiliza para identificar un recurso y además nos da información sobre como acceder a él, como localizarlo.
     * Formato URL:
  ![imagen lenguajes](img/url.png) 
  * Existen distintos modos o métodos para intercambiar información entre cliente y servidor:
-    * Método GET: petición de información 
+    * __Método GET__: petición de información 
         * GET consultatelefono.php?cliente=empresa1 
         * Los parámetros se pasan como pares nombre=valor 
         * Se pueden pasar varios parámetros seguidos con &
-    * Método POST: 
+    * __Método POST__: 
         * Se usa habitualmente para enviar información a un servidor web. 
             * Enviar el contenido de un formulario de autenticación
             * Entradas de datos
@@ -200,4 +200,4 @@ Existen múltiples alternativas:
 * __Herramientas de tratamiento de imágenes__: la mayoría de las páginas web muestran contenido gráfico de una u otra manera. Es necesario el uso de este tipo de herramientas para adecuar las características de las imágenes a su transmisión.
 * __Herramientas para la creación y administración de bases de datos__: herramientas para la carga de datos y el mantenimiento posterior de los datos almacenados.
   
-:computer:Hoja01_herramientas_01
+:computer:Hoja01_herramientas_01, Hoja01_herramientas_02
