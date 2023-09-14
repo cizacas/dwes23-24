@@ -93,7 +93,7 @@ Hay que diferenciar entre:
 * __HTML__: solo presenta texto en una página, además de definir algunos aspectos visuales en el documento mediante el uso de estilos.
 * __Hojas de estilo (CSS)__: definen reglas de representación del contenido en  colaboración con HTML.
 * __JavaScript__: lenguaje de programación interpretado, permite el uso de efectos  visuales y nuevas interacciones con el usuario. Se usa habitualmente a través de  bibliotecas como jQuery, Angular o React.
-* __XML__: lenguaje de programación auto descriptivo ampliamente utilizado para  el intercambio de datos entre aplicaciones multiplataforma.
+* __XML__: lenguaje de marcado auto descriptivo ampliamente utilizado para  el intercambio de datos entre aplicaciones multiplataforma.
 * __JSON__: surge como el gran rival del XML ya que es más ligero y legible.
 * __Applets__: programas desarrollados en Java (no recomendado).
 * __ActiveX__: controles que tienen un comportamiento parecido a los applets pero son desarrollados por Microsoft (no recomendado).
