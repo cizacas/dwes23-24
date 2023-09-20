@@ -9,3 +9,7 @@ Apuntes de Desarrollo Web en Entorno Servidor del CFGS de Desarrollo de Aplicaci
 [Apuntes de la Unidad 1.](Tema1/Selecciondearquitecturasyherramientasdeprogramacion.md)
 
 [Instalación de Visual Studio Code con PHP](Tema1/VisualStudioCodePHP.md)
+
+**2. UNIDAD 2.Inserción de código en páginas web**
+
+[Apuntes de la Unidad 2.](Tema2/Insercioncodigopaginasweb.md)

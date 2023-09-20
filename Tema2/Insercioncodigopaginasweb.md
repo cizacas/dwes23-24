@@ -24,10 +24,7 @@
 
 ## Inserción de código de servidor
 
-* Estructura páginas estáticas
-  
-  * Sencilla
-  * Con tres partes:
+* Estructura páginas estáticas. Una página sencilla tiene tres partes:
     * Cabecera (definición directivas)
     * Zona metadatos
     * Cuerpo del documento (con la información a mostrar).
@@ -43,7 +40,7 @@
 ![imagen configuración php](img/php.png)
 
 ## PHP- Hypertext Preprocessor
-
+* PHP es sensible a las mayúsculas
 * Lenguaje de código __abierto__
 * Permite su uso junto con documentos HTML mediante la __inserción de fragmentos__ de código PHP acotados por etiquetas especiales
 * El código PHP es __interpretado__ por el servidor web donde se aloja el documento y se genera el correspondiente código HTML para mostrar por el navegador
@@ -52,11 +49,9 @@
 * Es compatible con diferentes tecnologías
 * Admite los principales servidores web y soporte con __diferentes repositorios de BD__ (para MySQL posee librerías específicas)
 
-### Etiquetas de servidor
-
-* PHP es sensible a las mayúsculas
-  
 <div class="page"/>
+
+### Etiquetas de servidor
 
 La incrustación de código PHP en HTML se puede hacer de varias maneras:
 * Forma a)(compatible con todas las plataformas)
