@@ -1,4 +1,12 @@
 {
     "markdown-pdf.displayHeaderFooter": false,
-    "markdown-pdf.breaks": true
+    "markdown-pdf.breaks": true,
+    "workbench.colorTheme": "Visual Studio Dark",
+    "wrap.with.php": {
+        
+        "label": "@php",
+        "description": "@php...@endphp",
+        "disabled": false,
+        "snippet": "@php\n\t$TM_SELECTED_TEXT\n@endphp$0"
+    }
 }
