@@ -20,7 +20,7 @@
     - [Cadenas de texto](#cadenas-de-texto)
       - [Concatenación de cadenas](#concatenación-de-cadenas)
     - [Funciones relacionadas con los tipos de datos](#funciones-relacionadas-con-los-tipos-de-datos)
-    - [Variables especiales en PHP](#variables-especiales-en-php)
+    - [Operador ternario](#operador-ternario)
 
 ## Inserción de código de servidor
 
@@ -382,6 +382,7 @@ Funciones para comprobar si es de un tipo concreto:
 :computer:Hoja02_PHP_02
 
 Funciones para __Fechas__: no hay un tipo especifico. La información fecha y hora se almacena como un número entero y hay una serie de funciones en PHP para trabajar con ellas:
+
 * __date( )__ es una de las más útiles. Permite obtener una cadena de texto a partir de una fecha y hora con el formato que se elija.
   
 ```php 
@@ -394,16 +395,29 @@ Si no se indica el segundo parámetro se utiliza la hora actual
 ```  
 * __getdate( )__ devuelve un array con información sobre la fecha y hora actual.
 
+Más información sobre [funciones de fechas](https://www.php.net/manual/es/ref.datetime.php)
+
+
+### Operador ternario
+El operador condicional (ternario) es el único operador que tiene tres operandos.
+Sintaxis:
+
+```php
+condición ? expr1 : expr2
+```
+
+* condición , una expresión que se evalúa como true o false.
+* expr1, expr2 , expresión con valores de algún tipo
+
+```php
+<?php
+    $a=1;
+    $b=3;
+    $imprimir=($a<$b)? "a es menor que b":(($a>$b)?"a es mayor que b": "a es igual a b");
+    print $imprimir;
+?>
+```
+
 :computer:Hoja02_PHP_03
 
-### Variables especiales en PHP
-
-* PHP incluye variables internas predefinidas que pueden usarse desde cualquier ámbito. Se denominan __superglobales__.
-* Cada una de estas variables es un array que contiene un conjunto de valores. Son las siguientes:
-  * **$_SERVER**: contiene información sobre el entorno del servidor web y de ejecución. 
-  * **$_GET, $_POST y $_COOKIE**: contienen las variables que se han pasado al guión actual utilizando respectivamente los métodos GET (parámetros en la URL), HTTP POST y Cookies HTTP.
-  * **$_REQUEST**: junta en uno solo el contenido de los tres arrays anteriores.
-  * **$_ENV**: contiene las variables que se puedan haber pasado a PHP desde el entorno en que se ejecuta.
-  * **$_FILES**: contiene los ficheros que se puedan haber subido al servidor utilizando el método POST.
-  * **$_SESSION**: contiene las variables de sesión disponibles para el guión actual.
 

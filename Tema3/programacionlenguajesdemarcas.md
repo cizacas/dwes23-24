@@ -19,6 +19,7 @@
     - [Arrays](#arrays)
       - [Recorrer un array](#recorrer-un-array)
       - [Funciones para trabajar con arrays](#funciones-para-trabajar-con-arrays)
+    - [Variables especiales en PHP](#variables-especiales-en-php)
     - [Objetos](#objetos)
       - [Creación de clases en PHP](#creación-de-clases-en-php)
       - [Métodos get y set](#métodos-get-y-set)
@@ -569,6 +570,18 @@ foreach ($modulos2 as $codigo => $modulo)
 ```
 * unset(nombrearray[indice]),  borrar un elemento dentro del array indicando el indice. Si ponemmos solo el nombre del array borra todo el array
 
+<div class="page"/>
+
+### Variables especiales en PHP
+
+* PHP incluye variables internas predefinidas que pueden usarse desde cualquier ámbito. Se denominan __superglobales__.
+* Cada una de estas variables es un array que contiene un conjunto de valores. Son las siguientes:
+  * **$_SERVER**: contiene información sobre el entorno del servidor web y de ejecución. 
+  * **$_GET, $_POST y $_COOKIE**: contienen las variables que se han pasado al guión actual utilizando respectivamente los métodos GET (parámetros en la URL), HTTP POST y Cookies HTTP.
+  * **$_REQUEST**: junta en uno solo el contenido de los tres arrays anteriores.
+  * **$_ENV**: contiene las variables que se puedan haber pasado a PHP desde el entorno en que se ejecuta.
+  * **$_FILES**: contiene los ficheros que se puedan haber subido al servidor utilizando el método POST.
+  * **$_SESSION**: contiene las variables de sesión disponibles para el guión actual.
 
 :computer: Hoja03_PHP_03
 
