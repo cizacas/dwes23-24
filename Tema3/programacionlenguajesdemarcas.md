@@ -38,6 +38,9 @@
       - [Con GET](#con-get)
       - [Con POST](#con-post)
     - [Validación de datos](#validación-de-datos)
+
+<div class="page"/>
+
 ## Estructuras de control
 
 son de dos tipos:
@@ -177,6 +180,8 @@ sintaxis
 
 ### Creación y ejecución de funciones
 Para crear tus propias funciones se usa la palabra __function__
+
+<div class="page"/>
 
 ```php
 <?php
@@ -519,6 +524,9 @@ foreach ($modulos2 as $codigo => $modulo)
 		echo "El código del módulo ".$modulo." es ".$codigo."<br/";
 
 ```
+
+<div class="page"/>
+
 #### Funciones para trabajar con arrays
 
 * list(variable1,...,variablen)=nombrearray
