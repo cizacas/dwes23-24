@@ -1,7 +1,7 @@
 {
     "markdown-pdf.displayHeaderFooter": false,
     "markdown-pdf.breaks": true,
-    "workbench.colorTheme": "Visual Studio Dark",
+    "workbench.colorTheme": "Default Light Modern",
     "wrap.with.php": {
         
         "label": "@php",
