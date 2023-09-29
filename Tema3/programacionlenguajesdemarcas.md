@@ -653,6 +653,8 @@ Ejercicio: crea los métodos get y set para la clase Producto creada por ti.
 
 Desde PHP 5 se introdujeron los llamados __métodos mágicos__ entre ellos **__set** y **__get** Si se declaran estos dos métodos en una clase, PHP los invoca automáticamente cuando desde un objeto se intenta usar un atributo no existente o no accesible
 
+Mas información sobre [los métodos mágicos] (https://www.php.net/manual/es/language.oop5.magic.php)
+
 Por ejemplo, el código siguiente simula que la clase Producto tiene cualquier atributo que queramos usar:
 
 ```php
@@ -918,7 +920,7 @@ final class Persona{
     …
 }
 ```
-Opuestamente al __modificador final__ existe también  el __modificador abstract__. Se utiliza de la misma forma, tanto con métodos como con clases completas, pero en lugar de prohibir la herencia, obliga aque se herede. Es decir, una clase con el modificador abstract no puede tener objetos que la instancien, pero sí podrá utilizarse de clase base y sus subclases sí podrán utilizarse para instanciar objetos.
+Opuestamente al __modificador final__ existe también  el __modificador abstract__. Se utiliza de la misma forma, tanto con métodos como con clases completas, pero en lugar de prohibir la herencia, obliga a que se herede. Es decir, una clase con el modificador abstract no puede tener objetos que la instancien, pero sí podrá utilizarse de clase base y sus subclases sí podrán utilizarse para instanciar objetos.
 
 <div class="page"/>
 
