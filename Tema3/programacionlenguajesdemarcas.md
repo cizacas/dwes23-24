@@ -30,6 +30,15 @@
       - [Utilización de objetos](#utilización-de-objetos)
       - [Herencia](#herencia)
       - [Interfaces](#interfaces)
+      - [Traits](#traits)
+        - [Orden de precedencia entre traits y clases](#orden-de-precedencia-entre-traits-y-clases)
+        - [conflictos entre métodos de traits](#conflictos-entre-métodos-de-traits)
+        - [Usar Reflection con traits](#usar-reflection-con-traits)
+      - [Namespaces](#namespaces)
+        - [la constante NAMESPACE](#la-constante-namespace)
+        - [La palabra reservada namespace](#la-palabra-reservada-namespace)
+        - [Importar un namespace](#importar-un-namespace)
+        - [Utilizar alias en los namespace](#utilizar-alias-en-los-namespace)
   - [Funciones relacionadas con los tipos de datos completos](#funciones-relacionadas-con-los-tipos-de-datos-completos)
   - [Formularios](#formularios)
     - [Métodos GET y POST](#métodos-get-y-post)
@@ -1011,6 +1020,260 @@ Para finalizar con los interfaces, a la lista de funciones de PHP relacionadas c
 | __interface_exists__  | if (interface_exists('iMuestra')){ ...}  | Devuelve true si existe el interface que se indica o false en caso contrario.|
 
 :computer: Hoja03_PHP_06
+
+#### Traits
+
+* Desde la versión 5.4 PHP implementa una metodología de código llamada Traits (rasgos).
+* Los traits son un mecanismo de reutilización de código en lenguajes que tienen herencia simple. 
+* El objetivo de los traits es reducir las limitaciones de la herencia simple permitiendo reutilizar métodos en varias clases independientes y de distintas jerarquías. 
+* Un trait es similar a una clase, pero su objetivo es agrupar funcionalidades específicas. 
+* Un trait, al igual que las clases abstractas, no se puede instanciar, simplemente facilita comportamientos a las clases sin necesidad de usar la herencia.
+  
+```php
+trait Saludar{
+    function decirHola(){
+        return "hola";
+    }
+}
+trait Despedir{
+    function decirAdios(){
+        return "adios";
+    }
+}
+class Comunicacion{
+    use saludar, Despedir;
+}
+$comunicacion= new Comunicacion();
+echo $comunicacion->decirHola().",que tal ".$comunicacion->decirAdios();
+
+```
+__El trait__ no impone ningún comportamiento en la clase, simplemente es como si copiaras los métodos del trait y los pegaras en la clase.
+
+__Un trait__ no puede implementar interfaces ni extender clases normales ni abstractas.
+
+También se puede usar traits dentro de otros traits:
+```php
+trait Saludar{
+    function decirHola(){
+        return "hola";
+    }
+}
+trait Despedir{
+    function decirAdios(){
+        return "adios";
+    }
+}
+trait SaludoYDespedida{
+    use Saludar,Despedir;
+}
+class comunicacion{
+    use SaludoYDespedida;
+}
+$comunicacion= new Comunicacion();
+echo $comunicacion->decirHola().",que tal ".$comunicacion->decirAdios();
+
+```
+##### Orden de precedencia entre traits y clases
+
+Utilizar traits dentro de otros traits es frecuente cuando la aplicación crece y hay numerosos traits que pueden agruparse para tener que incluir menos en una clase.
+
+Eso hace que pueda haber métodos con el mismo nombre en diferentes traits o en la misma clase, por lo que tiene que haber un orden. Existe __un orden de precedencia__ de los métodos disponibles en una __clase__ respecto a los de los __traits__:
+
+1. Métodos de un trait sobreescriben métodos heredados de una clase padre
+2. Métodos definidos en la clase actual sobreescriben a los métodos de un trait
+
+Ejemplo
+```php
+// definir el trait comunicacion
+trait Comunicacion {
+    function decirHola(){
+        return "Hola";
+    }
+    function decirQueTal(){
+        return "¿Qué tal? Soy un trait";
+    }
+    function decirHolaYQuetal(){
+        return $this->decirHola() .  " " . $this->decirQueTal();
+    }
+    function preguntarEstado(){
+        return $this->decirHola() . " " . parent::decirQueTal();
+    }
+    function decirBien(){
+        return "Bien, desde el Trait Comunicación";
+    }
+}
+
+// definir las clases Estado y Comunicar
+class Estado {
+    function decirQueTal(){
+        return "¿Qué tal? Soy Estado";
+    }
+    function decirBien(){
+        return "Bien, desde la clase Estado";
+    }
+}
+class Comunicar extends Estado {
+    use Comunicacion;
+    function decirQueTal() {
+        return "¿Qué tal? Soy Comunicar";
+    }
+}
+
+// creamos una instancia de comunicar y empleamos las funciones
+$a = new Comunicar();
+echo $a->decirHolaYQuetal() . "<br>"; // Devuelve: Hola ¿Qué tal? Soy comunicar
+echo $a->preguntarEstado() . "<br>"; // Devuelve: Hola ¿Qué tal? Soy Estado
+echo $a->decirBien(); // Devuelve: Bien, desde el Trait Comunicación
+
+```
+##### conflictos entre métodos de traits
+Cuando se usan __múltiples traits__ es posible que haya __diferentes traits que usen los mismos nombres de métodos__. PHP devolverá un __error fatal__. Para evitar este error hay que usar dentro de la clase la palabra __insteadof__
+
+Ejemplo:
+```php
+trait Juego {
+    function play(){
+        echo "Jugando a un juego";
+    }
+}
+trait Musica {
+    function play(){
+        echo "Escuchando música";
+    }
+}
+class Reproductor {
+    use Juego, Musica {
+        Musica::play insteadof Juego;
+    }
+}
+$reproductor = new Reproductor();
+$reproductor->play(); // Devuelve: Escuchando música
+
+```
+En el ejemplo anterior se ha elegido un método sobre el otro respecto a dos traits. Hay ocasiones en las que puedes querer mantener los dos métodos, pero evitar conflictos. Se puede introducir un nuevo nombre para un método de un trait como alias. El alias no renombra el método, pero ofrece un nombre alternativo que puede usarse en la clase. Se emplea la palabra __as__:
+```php
+class Reproductor {
+    use Juego, Musica {
+        Juego::play as playDeJuego;
+        Musica::play insteadof Juego;
+    }
+}
+$reproductor = new Reproductor;
+$reproductor->play(); // Devuelve: Escuchando música
+$reproductor->playDeJuego(); // Devuelve: Jugando a un juego
+
+```
+##### Usar Reflection con traits
+
+[Reflection](https://www.php.net/manual/es/book.reflection) es una característica de __PHP__ que nos permite analizar la estructura interna de interfaces, clases y métodos y poder manipularlos. Existen cuatro métodos que podemos utilizar con Reflection para los traits:
+
+* __ReflectionClass::getTraits()__. Devuelve un array con todos los traits disponibles en una clase
+* __ReflectionClass::getTraitNames()__. Devuelve un array con los nombres de los traits en una clase.
+* __ReflectionClass::isTrait()__. Comprueba si algo es un trait o no.
+* __ReflectionClass::getTraitAliases()__ Devuelve un trait con los alias como keys y sus nombres originales como values.
+
+#### Namespaces 
+
+Los namespaces o __espacios de nombres__ permiten crear aplicaciones complejas con mayor flexibilidad evitando problemas de conflictos entre clases y mejorando la legibilidad del código.
+
+Un namespace no es más que un directorio para __clases, traits, interfaces, funciones y constantes__. Se crean utilizando la palabra reservada namespace al principio del archivo, antes que cualquier otro código, a excepción de la estructura de control declare.
+
+Supongamos que definimos la siguiente clase:
+```php
+// MiClase.php
+class MiClase {
+// ...codigo
+}
+```
+Si queremos instanciar la clase en otro archivo basta con escribir
+```php
+include 'MiClase.php';
+
+$miClase = new MiClase();
+
+```
+Con un proyecto sencillo no habría dificultades con esta metodología. Los problemas pueden venir cuando el proyecto aumenta y puede ocurrir que coincidan clases, funciones o constantes de PHP o de __librerías de terceros__ con las del propio proyecto.
+
+Si ahora cambio el fichero a un nuevo directorio
+```php
+// Directorio: Proyecto/Prueba/MiClase.php
+namespace Proyecto\Prueba;
+
+class MiClase {
+//...
+}
+
+```
+Para utilizar __la clase__
+
+```php
+include 'Proyecto/Prueba/MiClase.php';
+
+$miClase = new Proyecto\Prueba\MiClase();
+
+```
+Siempre se emplea como namespace el __directorio de la clase__. No es obligatorio pero es lo más recomendable.
+
+__Los namespaces__ proporcionan una forma de agrupar clases, interfaces, funciones y constantes relacionadas.
+
+##### la constante NAMESPACE
+
+__NAMESPACE__  Es una constante mágica que devuelve un string con el nombre del namespace actual:
+
+```php
+namespace MiProyecto;
+
+echo "Namespace actual: " . __NAMESPACE__;
+
+```
+Esta constante se puede utilizar para __construir nombres dinámicamente__:
+```php
+namespace MiProyecto;
+
+function obtener($nombreClase){
+    $x = __NAMESPACE__ . '\\' . $nombreClase();
+    return new $x;
+}
+
+```
+##### La palabra reservada namespace
+
+La palabra reservada __namespace__ es equivalente a __self__ en las __clases__. 
+Se utiliza para solicitar un elemento del namespace actual:
+
+```php
+namespace MiProyecto;
+
+namespace\miFuncion(); // llama a MiProyecto\miFuncion()
+namespace\MiClase::metodo(); // llama al método estático metodo() de la clase MiClase. Equivale a MiProyecto\Miclase::metodo()
+
+```
+##### Importar un namespace
+
+Si tenemos que utilizar una clase varias veces en un archivo, podemos evitar tener que escribir el namespace tantas veces __importándolo__, así después solo habrá que escribir la clase:
+
+```php
+include 'Proyecto/Prueba/MiClase.php';
+
+use Proyecto\Prueba\MiClase;
+
+$miClase = new MiClase();
+```
+##### Utilizar alias en los namespace
+
+Utilizar un __alias__ para utilizar una clase bajo un nombre diferente:
+
+```php
+include 'Proyecto/Prueba/MiClase.php';
+
+use Proyecto\Prueba\MiClase as Clase;
+
+$miClase = new Clase(); // instancia un objeto de la clase Proyecto\Prueba\MiClase
+
+// No es posible con nombres dinámicos
+$x = 'MiClase';
+$objeto = new $x; // instancia de la clase MiClase. No detecta el apodo
+```
 
 ## Funciones relacionadas con los tipos de datos completos
 
