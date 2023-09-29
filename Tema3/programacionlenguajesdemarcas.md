@@ -99,7 +99,6 @@ son de dos tipos:
 <?php
     $a=1;
     match ($a){
-         0
          0=>print " a vale 0",
          1=>print " a vale 1",
          default=> print "a no vale 0 ni 1"
