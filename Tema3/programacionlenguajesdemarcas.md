@@ -1276,6 +1276,7 @@ $objeto = new $x; // instancia de la clase MiClase. No detecta el apodo
 ```
 
 ## Funciones relacionadas con los tipos de datos 
+
 En PHP existen funciones específicas para comprobar y establecer el tipo de datos de una variable, __gettype__ obtiene el tipo de la variable que se le pasa como parámetro y devuelve una cadena de texto, que puede ser array, boolean, double, integer, object, string, null, resource o unknown type.
 
 También podemos comprobar si la variable es de un tipo concreto utilizando una de las siguientes funciones: **is_array(), is_bool(), is_float(), is_integer(), is_null(), is_numeric(), is_object(), is_resource(), is_scalar() e is_string()**. Devuelven true si la variable es del tipo indicado.
