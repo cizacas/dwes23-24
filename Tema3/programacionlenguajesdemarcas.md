@@ -22,11 +22,13 @@
     - [Variables especiales en PHP](#variables-especiales-en-php)
     - [Objetos](#objetos)
       - [Creación de clases en PHP](#creación-de-clases-en-php)
+      - [Constructores](#constructores)
+      - [Constructor property promotion](#constructor-property-promotion)
+        - [creando instancias desde un constructor](#creando-instancias-desde-un-constructor)
       - [Métodos get y set](#métodos-get-y-set)
       - [Operador this](#operador-this)
       - [Constantes](#constantes)
       - [Métodos estáticos](#métodos-estáticos)
-      - [Constructores](#constructores)
       - [Utilización de objetos](#utilización-de-objetos)
       - [Herencia](#herencia)
       - [Interfaces](#interfaces)
@@ -39,6 +41,8 @@
         - [La palabra reservada namespace](#la-palabra-reservada-namespace)
         - [Importar un namespace](#importar-un-namespace)
         - [Utilizar alias en los namespace](#utilizar-alias-en-los-namespace)
+      - [Enumeraciones](#enumeraciones)
+        - [Métodos dentro de un enumerado](#métodos-dentro-de-un-enumerado)
   - [Funciones relacionadas con los tipos de datos](#funciones-relacionadas-con-los-tipos-de-datos)
   - [Formularios](#formularios)
     - [Métodos GET y POST](#métodos-get-y-post)
@@ -72,7 +76,6 @@ son de dos tipos:
         print "a es igual a b";
 ?>
 ```
-
 > no es necesario poner {} porque solo ejecuta una sentencia en cada caso
 * __Operador ternario__: otra forma de definir un if
   
@@ -84,7 +87,6 @@ son de dos tipos:
     print $imprimir;
 ?>
 ```
-  
 * __switch__: similar a enlazar varias sentencias if comparando una misma variable con diferentes valores
   
 ```php
@@ -114,7 +116,6 @@ son de dos tipos:
     }
 ?>
 ```
-
 ### Sentencias repetitivas o bucles
 
 * __while:__:define un bucle que se ejecuta mientras se cumpla una expresión. La expresión se evalúa antes de comenzar cada ejecución del bucle. 
@@ -578,7 +579,9 @@ foreach ($modulos2 as $codigo => $modulo)
 ```
 * unset(nombrearray[indice]),  borrar un elemento dentro del array indicando el indice. Si ponemmos solo el nombre del array borra todo el array
 
-<div class="page"/>
+* Si sólo nos interesa saber si una variable está definida y no es null, puedes usar __la función isset__. 
+__La función unset__ destruye la variable o variables que se le pasa como parámetro.
+
 
 ### Variables especiales en PHP
 
@@ -592,6 +595,8 @@ foreach ($modulos2 as $codigo => $modulo)
   * **$_SESSION**: contiene las variables de sesión disponibles para el guión actual.
 
 :computer: Hoja03_PHP_03
+
+<div class="page"/>
 
 ### Objetos
 
@@ -644,6 +649,123 @@ echo $p->muestra();
 ```
 Ejercicio: Crea la clase Producto con los atributos que consideres necesarios.
 
+#### Constructores
+
+Desde PHP 7 puedes definir en las clases métodos constructores, que se ejecutan cuando se crea el objeto. El constructor de una clase debe llamarse __construct__. Se pueden utilizar, por ejemplo, para asignar valores a atributos.
+
+```php
+class Producto{
+    
+    private $codigo;
+    public function __construct(){
+        $this->codigo=1;
+    }
+…
+}
+
+```
+El constructor de una clase puede llamar a otros métodos o tener parámetros, en cuyo caso deberán pasarse cuando se crea el objeto.
+
+Sin embargo, __sólo puede haber un método constructor en cada clase__
+
+```php
+class Producto{
+    
+    private $codigo;
+    public function __construct($codigo){
+        $this->$codigo = $codigo;
+            }
+…
+}
+
+```
+Ejercicio: Crea un constructor para vuestra clase Producto.
+
+También es posible definir un método destructor, que debe llamarse **__destruct** y permite definir acciones que se ejecutarán cuando se elimine el objeto.
+
+```php
+class Producto{
+    
+    private $codigo;
+    public function __construct($codigo){
+        $this->$codigo = $codigo;
+        
+    }
+    public function __destruct(){
+         $this->$codigo=0;
+    }
+…
+}
+$p = new Producto('Iphone');
+```
+
+#### Constructor property promotion
+
+Desde PHP 8 podemos definir una clase indicando el tipo de dato del atributo. También podemos definir un constructor donde los parámetros sean los atributos de la clase sin tener que definirlos.
+
+```php
+class Persona{
+	 public string $nombre;
+	 public int $edad;
+	 
+	 public function __construct(string $nombre, int $edad){
+		 $this->nombre=$nombre;
+		 $this->edad=$edad;
+	 }
+	
+ }
+
+$persona1 = new Persona("Juan",25);
+
+echo sprintf("%s tiene %d años", $persona1->nombre, $persona1->edad);
+```
+Los atributos se definen al pasar los parámetros al constructor
+
+```php
+class Persona{
+	
+	 
+	 public function __construct( public string $nombre, public int $edad)
+	 {
+
+	 } 
+	
+ }
+
+$persona1 = new Persona("Juan",25);
+
+echo sprintf("%s tiene %d años", $persona1->nombre, $persona1->edad);
+```
+##### creando instancias desde un constructor
+
+Desde PHP 8, podemos crear un objeto dentro de un constructor
+
+```php
+
+class HolaMundo  {
+    public function decirHola(string $nombre): string
+    {
+        return "Hola $nombre<br>";
+    }
+
+   
+}
+$holaMundo = new HolaMundo();
+echo $holaMundo->decirHola("Juan");
+
+class MiHolaMundo {
+    public function __construct(
+        private readonly HolaMundo $holaMundo = new HolaMundo(),
+    ) {}
+
+    public function hola(string $nombre): string {
+        return $this->holaMundo->decirHola($nombre);
+    }
+}
+$miHolaMundo = new MiHolaMundo();
+echo $miHolaMundo->hola("Juan");
+```
+
 #### Métodos get y set 
 
 Aunque no es obligatorio, el nombre del método que nos permite obtener el valor de un atributo suele empezar por get y el que nos permite modificarlo por set
@@ -657,7 +779,36 @@ public function setCodigo ($nuevo_codigo)
         
     }
 public function getCodigo() {return $this->codigo;}
+
 ```
+Ahora podemos definirlos indicando el tipo de dato que devuelve el get
+
+```php
+class Persona{
+	
+	 
+	 public function __construct( private string $nombre, private int $edad )
+	 {
+	 } 
+	 
+	 public function getNombre(): string
+    {
+        return  $this->nombre;
+    }
+	
+	 public function getEdad(): int
+    {
+        return  $this->edad;
+    }
+	
+ }
+
+$persona1 = new Persona("Juan",25);
+
+echo sprintf("%s tiene %d años" , $persona1->getNombre(),$persona1->getEdad());
+```
+
+
 Ejercicio: crea los métodos get y set para la clase Producto creada por ti.
 
 Desde PHP 5 se introdujeron los llamados __métodos mágicos__ entre ellos **__set** y **__get** Si se declaran estos dos métodos en una clase, PHP los invoca automáticamente cuando desde un objeto se intenta usar un atributo no existente o no accesible
@@ -678,6 +829,25 @@ class Producto
     }
 }
 ```
+El método **__toString**, es otro método mágico
+
+```php
+class Persona
+{
+    public function __construct(private string $nombre, private int $edad)
+    {
+       
+    }
+	
+	 public function __toString(): string
+    {
+        return  sprintf("%s tiene %d años", $this->nombre, $this->edad);
+    }
+}
+$persona1 = new Persona("Juan", 25);
+echo $persona1;
+```
+
 Ejercicio: comenta los métodos get y set que has hecho y añade los mágicos
 
 #### Operador this
@@ -696,7 +866,8 @@ print "<p>". $this->codigo ."</p";
 
 Además de métodos y propiedades, en una clase también se pueden definir __constantes__ utilizando la palabra __const__.
 
-No hay que confundir los atributos con las constantes Son conceptos distintos las constantes no pueden cambiar su valor ( de ahí su nombre), no usan elcarácter __$__ y está asociado a la clase, es decir, no existe una copia del mismo en cada objeto.
+No hay que confundir los atributos con las constantes.
+Son conceptos distintos las constantes no pueden cambiar su valor ( de ahí su nombre), no usan elcarácter __$__ y está asociado a la clase, es decir, no existe una copia del mismo en cada objeto.
 
 Por tanto, para acceder a las constantes de una clase, se debe utilizar el nombre de la clase y el operador __::__ llamado __operador de resolución de ámbito__ (que se utiliza para acceder a los elementos de una clase).
 
@@ -712,7 +883,6 @@ No es necesario que exista ningún objeto de una clase para poder acceder al val
 Además, sus nombres suelen escribirse en mayúsculas.
 
 Ejercicio: crea una clase BaseDatos que tendrá como constantes el dominio donde está alojada, el usuario y la contraseña y la base de datos a utilizar.
-<div class="page"/>
 
 #### Métodos estáticos
 
@@ -729,7 +899,7 @@ class Producto{
 ```
 Los atributos y métodos estáticos __no__ pueden ser llamados desde un objeto de la clase utilizando el operador ->.
 
-* Si el método o atributo es público , deberá accederse utilizando el nombre de la clase y el operador de resolución de ámbito.
+* Si el método o atributo es público , deberá accederse utilizando el nombre de la clase y el operador de resolución de ámbito __::__.
 
 ```php
     Producto:: nuevoProducto();
@@ -739,57 +909,10 @@ Los atributos y métodos estáticos __no__ pueden ser llamados desde un objeto d
 ```php
     self:: $num_productos++;
 ```
-#### Constructores
 
-Desde PHP 7 puedes definir en las clases métodos constructores, que se ejecutan cuando se crea el objeto. El constructor de una clase debe llamarse __construct__. Se pueden utilizar, por ejemplo, para asignar valores a atributos.
-
-```php
-class Producto{
-    private static $num_productos = 0;
-    private $codigo;
-    public function __construct(){
-        self:: $num_productos++;
-    }
-…
-}
-
-```
-El constructor de una clase puede llamar a otros métodos o tener parámetros, en cuyo caso deberán pasarse cuando se crea el objeto.
-
-Sin embargo, __sólo puede haber un método constructor en cada clase__
-
-```php
-class Producto{
-    private static $num_productos = 0;
-    private $codigo;
-    public function __construct($codigo){
-        $this->$codigo = $codigo;
-        self:: $num_productos++;
-    }
-…
-}
-
-```
-Ejercicio: Crea un constructor para vuestra clase Producto.
-
-También es posible definir un método destructor, que debe llamarse **__destruct** y permite definir acciones que se ejecutarán cuando se elimine el objeto.
-
-```php
-class Producto{
-    private static $num_productos = 0;
-    private $codigo;
-    public function __construct($codigo){
-        $this->$codigo = $codigo;
-        self:: $num_productos++;
-    }
-    public function __destruct(){
-        self::$num_productos--;
-    }
-…
-}
-$p = new Producto('Iphone');
-```
 :computer: Hoja03_PHP_04
+
+<div class="page"/>
 
 #### Utilización de objetos
 
@@ -840,8 +963,9 @@ $p = new Producto();
 $p->nombre = 'Xiaomi 13';
 $a = clone $p;
 ```
-Además, existe una forma sencilla de personalizar la copia para cada clase particular. Por ejemplo, puede suceder que quieras copiar todos los atributos menos alguno. En nuestro ejemplo, al menos el código de cada
-producto debe ser distinto y, por tanto, quizás no tenga sentido copiarlo al crear un nuevo objeto Si éste fuera el caso, puedes crear un método de nombre  **__clone** en la clase. Este método se llamará automáticamente después de copiar todos los atributos en el nuevo objeto.
+Además, existe una forma sencilla de personalizar la copia para cada clase particular. 
+Por ejemplo, puede suceder que quieras copiar todos los atributos menos alguno. En nuestro ejemplo, al menos el código de cada producto debe ser distinto y, por tanto, quizás no tenga sentido copiarlo al crear un nuevo objeto.
+Si éste fuera el caso, puedes crear un método de nombre  **__clone** en la clase. Este método se llamará automáticamente después de copiar todos los atributos en el nuevo objeto.
 
 ```php
 class Producto {
@@ -930,8 +1054,6 @@ final class Persona{
 }
 ```
 Opuestamente al __modificador final__ existe también  el __modificador abstract__. Se utiliza de la misma forma, tanto con métodos como con clases completas, pero en lugar de prohibir la herencia, obliga a que se herede. Es decir, una clase con el modificador abstract no puede tener objetos que la instancien, pero sí podrá utilizarse de clase base y sus subclases sí podrán utilizarse para instanciar objetos.
-
-<div class="page"/>
 
 ```php
 abstract class Persona{
@@ -1274,7 +1396,62 @@ $miClase = new Clase(); // instancia un objeto de la clase Proyecto\Prueba\MiCla
 $x = 'MiClase';
 $objeto = new $x; // instancia de la clase MiClase. No detecta el apodo
 ```
+#### Enumeraciones
 
+Desde PHP 8.1 se pueden utilizar los enumerados. Su sintaxis es muy parecida a la forma con que trabajamos con clases:
+```php
+enum Sede{
+    case ESPAÑA;
+    case PORTUGAL;
+    case MARRUECOS;
+}
+```
+Esto nos permite no solo encapsular una colección de valores, sino que además, podemos emplear el enumerado que hemos declarado para tipar las variables
+```php
+class Mundial{
+    public function __construct(
+        private Sede $sede 
+    ){}
+}
+```
+Lo que nos permite crear el objeto del siguiente modo:
+
+```php
+$mundial = new Mundial(Sede::ESPAÑA);
+```
+los enumerados son objetos creados con el patrón singleton, lo cual nos permite compararlos y obtener el resultado esperado
+
+```php
+$sedeEsp=Sede::ESPAÑA;
+$sedePor=Sede::PORTUGAL;
+$sedeActual=Sede::ESPAÑA;
+
+$sedeActual===$sedeEsp; //true
+$sedeActual===$sedePor;//flase
+$sedeActual instanceof Sede; //true
+
+```
+##### Métodos dentro de un enumerado
+
+Al igual que las clases, los enumerados también pueden definir métodos
+
+```php
+enum Sede{
+    case ESPAÑA;
+    case PORTUGAL;
+    case MARRUECOS;
+    public function lugar():string{
+        return match($this){
+            self::ESPAÑA =>'Madrid',
+            self::PORTUGAL=>'Lisboa',
+            self::MARRUECOS=>'Rabat'
+        };
+    }
+}
+$sedeAct=Sede::ESPAÑA;
+echo  $sedeAct->lugar();
+
+```
 ## Funciones relacionadas con los tipos de datos 
 
 En PHP existen funciones específicas para comprobar y establecer el tipo de datos de una variable, __gettype__ obtiene el tipo de la variable que se le pasa como parámetro y devuelve una cadena de texto, que puede ser array, boolean, double, integer, object, string, null, resource o unknown type.
@@ -1291,9 +1468,6 @@ También podemos comprobar si la variable es de un tipo concreto utilizando una 
 	print "\$b vale $b y es de tipo ".gettype($b);
 ?>
 ``` 
-Si sólo nos interesa saber si una variable está definida y no es null, puedes usar __la función isset__. 
-__La función unset__ destruye la variable o variables que se le pasa como parámetro.
-
 ## Formularios
 
 Son la forma de hacer llegar los datos a una aplicación web.
@@ -1407,7 +1581,6 @@ También se puede recuperar con la función __print_r__ que muestra el array com
 Al igual que en el método GET, se utiliza una variable interna __$_POST__, donde se almacenan todas las variables pasadas con este método. 
 
 La forma de almacenar la información, también es __un array en el que el índice es el nombre asignado al elemento del formulario__
-<div class="page"/>
 
 ```php
 $_POST[‘nombre’];
