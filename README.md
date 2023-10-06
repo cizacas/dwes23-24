@@ -17,3 +17,5 @@ Apuntes de Desarrollo Web en Entorno Servidor del CFGS de Desarrollo de Aplicaci
 **3. UNIDAD 3.Programación basada en lenguajes de marcas con código embebido**
 
 [Apuntes de la Unidad 3.](Tema3/programacionlenguajesdemarcas.md)
+
+[Manual básico de Composer](Tema3/composer.md)
