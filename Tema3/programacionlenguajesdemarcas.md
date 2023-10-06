@@ -813,7 +813,7 @@ Ejercicio: crea los métodos get y set para la clase Producto creada por ti.
 
 Desde PHP 5 se introdujeron los llamados __métodos mágicos__ entre ellos **__set** y **__get** Si se declaran estos dos métodos en una clase, PHP los invoca automáticamente cuando desde un objeto se intenta usar un atributo no existente o no accesible
 
-Mas información sobre [los métodos mágicos] (https://www.php.net/manual/es/language.oop5.magic.php)
+Mas información sobre [los métodos mágicos](https://www.php.net/manual/es/language.oop5.magic.php)
 
 Por ejemplo, el código siguiente simula que la clase Producto tiene cualquier atributo que queramos usar:
 
