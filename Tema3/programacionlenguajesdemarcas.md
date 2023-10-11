@@ -1418,6 +1418,7 @@ Lo que nos permite crear el objeto del siguiente modo:
 
 ```php
 $mundial = new Mundial(Sede::ESPAÑA);
+
 echo $mundial->name; // para sacar el nombre
 ```
 los enumerados son objetos creados con el patrón singleton, lo cual nos permite compararlos y obtener el resultado esperado
