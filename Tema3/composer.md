@@ -360,3 +360,8 @@ Composer ofrece una serie de comandos avanzados que pueden ser útiles en cierta
 * **composer fund**: Este comando muestra cómo ayudar a financiar el mantenimiento de las dependencias utilizadas.
 * **composer licenses**: Este comando muestra información acerca del tipo de licencias de las dependencias utilizadas.
 * **composer status**: Este comando muestra una lista de paquetes modificados localmente.
+
+:computer: Hoja03_COMPOSER_01
+
+:computer: Hoja03_COMPOSER_02
+ 

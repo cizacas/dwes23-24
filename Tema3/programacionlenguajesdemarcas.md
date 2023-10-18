@@ -32,6 +32,8 @@
       - [Utilización de objetos](#utilización-de-objetos)
       - [Herencia](#herencia)
       - [Interfaces](#interfaces)
+      - [Enumeraciones](#enumeraciones)
+        - [Métodos dentro de un enumerado](#métodos-dentro-de-un-enumerado)
       - [Traits](#traits)
         - [Orden de precedencia entre traits y clases](#orden-de-precedencia-entre-traits-y-clases)
         - [conflictos entre métodos de traits](#conflictos-entre-métodos-de-traits)
@@ -41,8 +43,6 @@
         - [La palabra reservada namespace](#la-palabra-reservada-namespace)
         - [Importar un namespace](#importar-un-namespace)
         - [Utilizar alias en los namespace](#utilizar-alias-en-los-namespace)
-      - [Enumeraciones](#enumeraciones)
-        - [Métodos dentro de un enumerado](#métodos-dentro-de-un-enumerado)
   - [Funciones relacionadas con los tipos de datos](#funciones-relacionadas-con-los-tipos-de-datos)
   - [Formularios](#formularios)
     - [Métodos GET y POST](#métodos-get-y-post)
@@ -1141,6 +1141,64 @@ Para finalizar con los interfaces, a la lista de funciones de PHP relacionadas c
 | __get_declared_interfaces__  | print_r(get_declared_interfaces());  |Devuelve un array con los nombres de los interfaces declarados |
 | __interface_exists__  | if (interface_exists('iMuestra')){ ...}  | Devuelve true si existe el interface que se indica o false en caso contrario.|
 
+#### Enumeraciones
+
+Desde PHP 8.1 se pueden utilizar los enumerados. Su sintaxis es muy parecida a la forma con que trabajamos con clases:
+```php
+enum Sede{
+    case ESPAÑA;
+    case PORTUGAL;
+    case MARRUECOS;
+}
+```
+Esto nos permite no solo encapsular una colección de valores, sino que además, podemos emplear el enumerado que hemos declarado para tipar las variables
+```php
+class Mundial{
+    public function __construct(
+        private Sede $sede 
+    ){}
+}
+```
+Lo que nos permite crear el objeto del siguiente modo:
+
+```php
+$mundial = new Mundial(Sede::ESPAÑA);
+
+echo $mundial->name; // para sacar el nombre
+```
+los enumerados son objetos creados con el patrón singleton, lo cual nos permite compararlos y obtener el resultado esperado
+
+```php
+$sedeEsp=Sede::ESPAÑA;
+$sedePor=Sede::PORTUGAL;
+$sedeActual=Sede::ESPAÑA;
+
+$sedeActual===$sedeEsp; //true
+$sedeActual===$sedePor;//flase
+$sedeActual instanceof Sede; //true
+
+```
+##### Métodos dentro de un enumerado
+
+Al igual que las clases, los enumerados también pueden definir métodos
+
+```php
+enum Sede{
+    case ESPAÑA;
+    case PORTUGAL;
+    case MARRUECOS;
+    public function lugar():string{
+        return match($this){
+            self::ESPAÑA =>'Madrid',
+            self::PORTUGAL=>'Lisboa',
+            self::MARRUECOS=>'Rabat'
+        };
+    }
+}
+$sedeAct=Sede::ESPAÑA;
+echo  $sedeAct->lugar();
+
+```
 :computer: Hoja03_PHP_06
 
 #### Traits
@@ -1396,64 +1454,8 @@ $miClase = new Clase(); // instancia un objeto de la clase Proyecto\Prueba\MiCla
 $x = 'MiClase';
 $objeto = new $x; // instancia de la clase MiClase. No detecta el apodo
 ```
-#### Enumeraciones
+:computer: Hoja03_PHP_07
 
-Desde PHP 8.1 se pueden utilizar los enumerados. Su sintaxis es muy parecida a la forma con que trabajamos con clases:
-```php
-enum Sede{
-    case ESPAÑA;
-    case PORTUGAL;
-    case MARRUECOS;
-}
-```
-Esto nos permite no solo encapsular una colección de valores, sino que además, podemos emplear el enumerado que hemos declarado para tipar las variables
-```php
-class Mundial{
-    public function __construct(
-        private Sede $sede 
-    ){}
-}
-```
-Lo que nos permite crear el objeto del siguiente modo:
-
-```php
-$mundial = new Mundial(Sede::ESPAÑA);
-
-echo $mundial->name; // para sacar el nombre
-```
-los enumerados son objetos creados con el patrón singleton, lo cual nos permite compararlos y obtener el resultado esperado
-
-```php
-$sedeEsp=Sede::ESPAÑA;
-$sedePor=Sede::PORTUGAL;
-$sedeActual=Sede::ESPAÑA;
-
-$sedeActual===$sedeEsp; //true
-$sedeActual===$sedePor;//flase
-$sedeActual instanceof Sede; //true
-
-```
-##### Métodos dentro de un enumerado
-
-Al igual que las clases, los enumerados también pueden definir métodos
-
-```php
-enum Sede{
-    case ESPAÑA;
-    case PORTUGAL;
-    case MARRUECOS;
-    public function lugar():string{
-        return match($this){
-            self::ESPAÑA =>'Madrid',
-            self::PORTUGAL=>'Lisboa',
-            self::MARRUECOS=>'Rabat'
-        };
-    }
-}
-$sedeAct=Sede::ESPAÑA;
-echo  $sedeAct->lugar();
-
-```
 ## Funciones relacionadas con los tipos de datos 
 
 En PHP existen funciones específicas para comprobar y establecer el tipo de datos de una variable, __gettype__ obtiene el tipo de la variable que se le pasa como parámetro y devuelve una cadena de texto, que puede ser array, boolean, double, integer, object, string, null, resource o unknown type.
@@ -1557,7 +1559,6 @@ La información va codificada en el cuerpo de la petición HTTP y por tanto viaj
 </body> 
 </html> 
 ```
-:computer: Hoja3_PHP_07(ejercicio1 y ejercicio2)
 
 ### Recuperación de información 
 
@@ -1640,5 +1641,10 @@ Si por algún motivo hay datos que se tengan que validar en el servidor, por eje
 > ?>
 >```
  
- :computer: Hoja03_PHP_07
+:computer: Hoja03_PHP_08
 
+:computer: Hoja03_PHP_09
+
+:computer: Hoja03_PHP_10
+ 
+ 
