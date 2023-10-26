@@ -931,10 +931,18 @@ En la tabla se especifica como añadir estos índices después de crear el campo
 ##### Claves ajenas
 Con Schema también podemos definir claves ajenas entre tablas:
 ```php
-$table->integer('user_id')->unsigned();
+$table->unsignedBigInteger('user_id');
 $table->foreign('user_id')->references('id')->on('users');
+
+// otra forma de definirlo
+
+$table->foreignId('user_id')->constrained();
+// más elegante aún
+
+$table->foreignFor(User::class)->constrained();
+
 ```
-En este ejemplo en primer lugar añadimos la columna "user_id" de tipo UNSIGNED  INTEGER (siempre tendremos que crear primero la columna sobre la que se va a  aplicar la clave ajena).
+En este ejemplo en primer lugar añadimos la columna "user_id" de tipo UNSIGNED INTEGER (siempre tendremos que crear primero la columna sobre la que se va a  aplicar la clave ajena).
 
 A continuación creamos la clave ajena entre la columna "user_id" y la columna "id" de la tabla "users".
 También podemos especificar las acciones que se tienen que realizar para "on delete" y "on update":
