@@ -241,6 +241,177 @@ y si acedemos a la api
 
 ![página de api](img/entradaapi.png)
 
+### Crear el primer controlador utilizando router
+En el contexto de PHP y el patrón de diseño de software Modelo-Vista-Controlador (MVC), un "controller" (controlador) es una parte fundamental de la arquitectura que se encarga de manejar las solicitudes del usuario, procesarlas y controlar la lógica de la aplicación. Su principal objetivo es actuar como un intermediario entre la vista (interfaz de usuario) y el modelo (los datos y la lógica de negocio).
+
+Para introducir los controladores en el ejemplo anterior, realizamos los siguientes pasos:
+
+En el fichero __index.php__ añadimos:
+```shell
+Router::setDefaultNamespace('\App\Controllers\Api');
+```
+Con esto estamos diciendo que dentro de `src` vamos a tener otro subdirectorio `Controllers\Api` que tenemos que crear y a partir de aquí creamos los controladores en este caso **ApiController.php** Crear un controlador que este mapeado por una ruta. 
+
+Para configurar este controlador tenemos que utilizar una serie de funciones que nos provee la libreria externa Router y es una recomendación que nosotros vamos a utilizar [Funciones Helper](https://github.com/skipperbent/simple-php-router#helper-functions).Creamos un fichero __helpers.php__ que ubicamos dentro de la carpeta `src`, también tenemos que modificar `composer.json` para que realice la carga de este fichero
+
+Un ejemplo de fichero __helpers.php__
+```php
+declare(strict_types = 1);
+
+use Pecee\SimpleRouter\SimpleRouter as Router;
+use Pecee\Http\Url;
+use Pecee\Http\Response;
+use Pecee\Http\Request;
+
+/**
+ * Get url for a route by using either name/alias, class or method name.
+ *
+ * The name parameter supports the following values:
+ * - Route name
+ * - Controller/resource name (with or without method)
+ * - Controller class name
+ *
+ * When searching for controller/resource by name, you can use this syntax "route.name@method".
+ * You can also use the same syntax when searching for a specific controller-class "MyController@home".
+ * If no arguments is specified, it will return the url for the current loaded route.
+ *
+ * @param string|null $name
+ * @param string|array|null $parameters
+ * @param array|null $getParams
+ * @return \Pecee\Http\Url
+ * @throws \InvalidArgumentException
+ */
+function url(?string $name = null, $parameters = null, ?array $getParams = null): Url
+{
+    return Router::getUrl($name, $parameters, $getParams);
+}
+
+/**
+ * @return \Pecee\Http\Response
+ */
+//retorna el respuesta del router que nos sirve para mostrar las respuestas en formato Json
+function response(): Response
+{
+    return Router::response();
+}
+
+/**
+ * @return \Pecee\Http\Request
+ */
+//nos sirve para recuperar los datos que nos van a enviar desde el exterior
+function request(): Request
+{
+    return Router::request();
+}
+
+/**
+ * Get input class
+ * @param string|null $index Parameter index name
+ * @param string|mixed|null $defaultValue Default return value
+ * @param array ...$methods Default methods
+ * @return \Pecee\Http\Input\InputHandler|array|string|null
+ */
+// recuperar el input que nos envian desde fuera
+function input($index = null, $defaultValue = null, ...$methods)
+{
+    if ($index !== null) {
+        return request()->getInputHandler()->value($index, $defaultValue, ...$methods);
+    }
+
+    return request()->getInputHandler();
+}
+
+/**
+ * @param string $url
+ * @param int|null $code
+ */
+function redirect(string $url, ?int $code = null): void
+{
+    if ($code !== null) {
+        response()->httpCode($code);
+    }
+
+    response()->redirect($url);
+}
+
+/**
+ * Get current csrf-token
+ * @return string|null
+ */
+function csrf_token(): ?string
+{
+    $baseVerifier = Router::router()->getCsrfVerifier();
+    if ($baseVerifier !== null) {
+        return $baseVerifier->getTokenProvider()->getToken();
+    }
+
+    return null;
+}
+
+```
+Para que Composer incluya este fichero modificamos `composer.json` en el apartado `autoload` 
+
+```shell
+
+ "files": [
+            "src/helpers.php"
+        ]
+
+```
+El fichero **ApiController.php**
+
+```php
+declare(strict_types=1);
+namespace App\Controllers\Api;
+
+final class ApiController
+{
+    public function __invoke():void{
+
+        response()->json(
+            ['message'=>'Esta es la entrada a nuestra API REST']
+        );
+
+    }
+}
+
+```
+y ahora nos queda modificar la entrada de __api.php__
+```php
+// definir un grupo de rutas para que todas responda con prefijo /api
+// y que llamen al controlador ApiController al método invoke
+
+Router::group(['prefix'=>'api'],function():void{
+        Router::get('/',[ApiController::class,'__invoke']);
+    }
+);
+```
+Y ahora probamos en el navegador
+![página de api json](img/apicontroller.png)
+
+
+
+## POSTMAN 
+
+Postman es una plataforma API para crear y utilizar API. Postman simplifica cada paso del ciclo de vida de la API y agiliza la colaboración para que puedas crear mejores API y más rápido. Información [Postman](https://www.postman.com/)
+Si es la primera vez que utilizamos la plataforma tendremos que descargar el servicio `desktop agent`
+Ejemplo
+
+Crea tu primera colección en el área de trabajo creado, por ejemplo,  con nombre cursoDWES y crea tu primer punto de acceso EntradaApi, y la petición http, el resultado es:
+
+![ejemplo postman](img/postman.png)
+
+### Congigurar un entorno
+las variables de entorno en Postman te permiten gestionar y utilizar de manera eficiente valores dinámicos en tus solicitudes, lo que facilita la automatización y la gestión de tus pruebas de API y peticiones.
+
+En la opción __Environments__, nos dá la opción de crear el entorno y posteriormente crear las variables. Por ejemplo, crearemos una variable `API_URL` que contenga el valor de entrada a todas nuestras api's definidas.
+
+![ejemplo activar entorno en postman](img/postman1.png)
+
+Una vez creado el entorno para poder utilizar las variables definidas es necesario __activar el entorno__
+Para utilizar la variable en la petición get se encuentra entre dobles llaves
+
+![ejemplo de utilización de variables de entornos](img/postman2.png)
 
 
 
