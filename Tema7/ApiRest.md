@@ -390,6 +390,101 @@ Y ahora probamos en el navegador
 ![página de api json](img/apicontroller.png)
 
 
+### Preparar las respuestas JSON de la API REST
+Centralizar todas las respuestas JSON, para optimizar el código. Para ello creamos dentro del directorio `src` un subdirectorio `Responses` un fichero **JsonResponse.php**
+Esta clase genérica de respuesta va a trabajar con [los códigos de respuesta HTTP](https://developer.mozilla.org/es/docs/Web/HTTP/Status)
+La clase a crear tiene unas constantes privadas para determinar si ha ido bien o mal, un método que evalúa si el código HTTP es correcto. Dos métodos privados que devuelven la respuesta Json en función si ha ido bien o mal , y finalmente el método público que devuelve la respuesta.
+
+Un ejemplo del fichero **JsonResponse.php**
+```php
+declare(strict_types = 1);
+
+namespace App\Responses;
+
+final class JsonResponse
+{
+    //constantes para definir las distintas situaciones de la aplicación
+    private const SUCCESS = 'exito';
+
+    private const ERROR = 'error';
+
+    // en HTTP un código de error >=400 es un error
+    private static function statusByHttpCode(int $httpCode): string
+    {
+        if ($httpCode >= 400) {
+            return self::ERROR;
+        }
+
+        return self::SUCCESS;
+    }
+
+    // en HTTP un código 204 - es sin información y un código 200 -es con éxito
+    /**
+     * @param array<string, mixed>|null $data
+     */
+    private static function success(?array $data = null): void
+    {
+        if (! $data) {
+            response()
+                ->httpCode(code: 204);
+            exit;
+        }
+
+        response()
+            ->httpCode(code: 200)
+            ->json(value: [
+                'status' => self::SUCCESS,
+                'data'   => $data,
+            ]);
+    }
+
+    private static function error(string $message, int $httpCode = 400): void
+    {
+        response()
+            ->httpCode(code: $httpCode)
+            ->json(value: [
+                'status'  => self::ERROR,
+                'message' => $message,
+            ]);
+    }
+    // el método a utilizar que analiza la respuesta
+    public static function response(?array $data = null, int $httpCode = 200): void
+    {
+        if (self::statusByHttpCode(httpCode: $httpCode) === self::SUCCESS) {
+            self::success(data: $data);
+        } else {
+            self::error(message: $data['message'], httpCode: $httpCode);
+        }
+    }
+}
+
+```
+Cambiar el fichero __ApiController.php__ para que utilice el método `response` de `JsonResponse` 
+un ejemplo de llamada a esta clase es:
+
+```php
+declare(strict_types = 1);
+
+namespace App\Controllers\Api;
+use App\Responses\JsonResponse;
+
+final class ApiController
+{
+    public function __invoke(): void
+    {
+        JsonResponse::response(
+            data:[
+                'producto'=> [
+                    'nombre'=>'producto 1',
+                    'descripcion'=>'es un producto de prueba',
+                ]
+                ],
+            );
+    }
+}
+```
+En el navegador muestra
+![página nueva api](img/json1.png)
 
 ## POSTMAN 
 
@@ -414,10 +509,127 @@ Para utilizar la variable en la petición get se encuentra entre dobles llaves
 ![ejemplo de utilización de variables de entornos](img/postman2.png)
 
 
+### Crear un ejemplo de conexión a base de datos, crear una entidad de pruebas con operaciones CRUD y respuestas JSON
 
+Lo primero en el fichero `.env` vamos a crear las credenciales a la base de datos. Tiene que estar creada la base de datos
 
+```shell
+DB_DSN=mysql:host=localhost:3306;dbname=apirest;charset=utf8mb4
+DB_USERNAME=root
+DB_PASSWORD=
 
+```
+A continuación , creamos dentro del directorio `src` un subdirectorio `services` que contiene el fichero **DBConnection.php**, que realiza la conexión con la BD e utiliza las variables de entorno para crear que por medio de PDO realice la conexión a la base de datos
 
+También, creamos dentro del directorio `src` un subdirectorio `Entities` donde creamenos el fichero **Producto.php**, que  es la clase de productos que tiene los métodos requeridos para realizar las siguientes tareas:
+* Crear la tabla productos siempre que no exista en la base de datos, los campos será un id clave primaria y autoincrementada, nombre de 50 caracteres no nulo, la descripción con 255 caracteres no nulo, precio con 8 enteros y 2 decimales y created_at que por defecto contiene CURRENT_TIMESTAMP
+* El método create que realiza la inserción del producto en la base de datos, que recibe por parámetro el array con los datos del producto que retorna un true o false de la operación
+* El método get que devuelve el array de todos los productos
+* El método find que busca un producto por su id, recibe por parámetro la clave del producto y devuelve un true o false.
+* El método update que modifica un producto por su id, recibe por parámetro un array con los datos del producto.
+* El método delete que borra un producto por su id, recibe por parámetro el id del producto a borrar.
+Como ejemplo solo figura la creación de la clase con el método de creación del producto
 
+```php
+declare(strict_types = 1);
 
+namespace APP\Entities;
 
+use App\Services\DBConnection;
+use PDO;
+
+final class Producto
+{
+    private PDO $db;
+
+    public function __construct()
+    {
+        $this->db = DBConnection::getInstance()->getConexion();
+        $this-> createTable();
+    }
+
+    private function createTable(): void
+    {
+        $sql = 'CREATE TABLE IF NOT EXISTS productos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(50) NOT NULL,
+            descripcion VARCHAR(255) NOT NULL,
+            precio DECIMAL(10, 2) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )';
+
+        $this->db->exec(statement: $sql);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return false|string
+     */
+    public function create(array $data): false|string
+    {
+        $sql = '
+            INSERT INTO productos (nombre, descripcion, precio)
+            VALUES (:nombre, :descripcion, :precio)
+        ';
+
+        $stmt = $this->db->prepare(query: $sql);
+        $stmt->execute(params: $data);
+
+        return $this->db->lastInsertId();
+    }
+}
+```
+Crear un controlador para cada una de las operaciones del producto, definir un subdirectorio `Producto` dentro de `Api` y por cada una de las operaciones creamos un nuevo controlador por ejemplo creamos el fichero __CreateProductoController.php__ para la clase que crea el producto
+
+```php
+declare(strict_types = 1);
+
+namespace App\Controllers\Api\Producto;
+
+use App\Entities\Producto;
+use App\Responses\JsonResponse;
+
+final class CreateProductoController
+{
+    public function __invoke(): void
+    {
+        $producto = new Producto();
+        $productoId = $producto->create(
+            data:input()->all(),
+        );
+
+        JsonResponse::response(
+            data:$producto->find(id:(int) $productoId)
+        );
+    }
+}
+```
+Hay que modificar el fichero que contiene las rutas  denominado **api.php**
+
+declare(strict_types = 1);
+use Pecee\SimpleRouter\SimpleRouter as Router;
+use App\Controllers\Api\ApiController;
+use App\Controllers\Api\Producto\CreateProductoController;
+
+//añadimos un nuevo grupo con el prefijo productos e indicamos el espacio de nombres
+
+```php
+Router::group(
+    ['prefix' => 'api'],
+    function (): void {
+        Router::get('/', [ApiController::class,'__invoke']);
+
+        Router::group(
+            ['namespace' => 'Producto','prefix' => 'productos'],
+            function (): void {
+                Router::post('/', [CreateProductoController::class,'__invoke']);
+            }
+        );
+    }
+);
+```
+Para probar el funcionamiento en `Postman` creamos una nueva entrada, con los datos del producto a insertar y enviamos para obtener la respuesta
+
+![ej crear producto](img/salidaCrear.png)
+
+:computer: Hoja07_API_01
