@@ -1,5 +1,17 @@
 # API REST
 
+- [API REST](#api-rest)
+  - [Que és](#que-és)
+    - [Ayudas a la mejora del código](#ayudas-a-la-mejora-del-código)
+    - [Definir el proyecto](#definir-el-proyecto)
+    - [Instalar, configurar las rutas de la aplicación](#instalar-configurar-las-rutas-de-la-aplicación)
+    - [Crear el primer controlador utilizando router](#crear-el-primer-controlador-utilizando-router)
+    - [Preparar las respuestas JSON de la API REST](#preparar-las-respuestas-json-de-la-api-rest)
+  - [POSTMAN](#postman)
+    - [Configurar un entorno](#configurar-un-entorno)
+    - [Crear un ejemplo de conexión a base de datos, crear una entidad con operaciones CRUD y respuestas JSON](#crear-un-ejemplo-de-conexión-a-base-de-datos-crear-una-entidad-con-operaciones-crud-y-respuestas-json)
+
+
 ## Que és
 Una API REST (Representational State Transfer) es un estilo de arquitectura de software que se utiliza para diseñar sistemas de comunicación en red, especialmente en el contexto de aplicaciones web. Es un enfoque que se basa en el protocolo HTTP y se adhiere a ciertos principios y restricciones que facilitan la interacción entre sistemas de software de una manera simple y eficiente.
 
@@ -496,7 +508,7 @@ Crea tu primera colección en el área de trabajo creado, por ejemplo,  con nomb
 
 ![ejemplo postman](img/postman.png)
 
-### Congigurar un entorno
+### Configurar un entorno
 las variables de entorno en Postman te permiten gestionar y utilizar de manera eficiente valores dinámicos en tus solicitudes, lo que facilita la automatización y la gestión de tus pruebas de API y peticiones.
 
 En la opción __Environments__, nos dá la opción de crear el entorno y posteriormente crear las variables. Por ejemplo, crearemos una variable `API_URL` que contenga el valor de entrada a todas nuestras api's definidas.
@@ -509,7 +521,7 @@ Para utilizar la variable en la petición get se encuentra entre dobles llaves
 ![ejemplo de utilización de variables de entornos](img/postman2.png)
 
 
-### Crear un ejemplo de conexión a base de datos, crear una entidad de pruebas con operaciones CRUD y respuestas JSON
+### Crear un ejemplo de conexión a base de datos, crear una entidad con operaciones CRUD y respuestas JSON
 
 Lo primero en el fichero `.env` vamos a crear las credenciales a la base de datos. Tiene que estar creada la base de datos
 
