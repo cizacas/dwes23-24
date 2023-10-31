@@ -10,6 +10,12 @@
   - [POSTMAN](#postman)
     - [Configurar un entorno](#configurar-un-entorno)
     - [Crear un ejemplo de conexión a base de datos, crear una entidad con operaciones CRUD y respuestas JSON](#crear-un-ejemplo-de-conexión-a-base-de-datos-crear-una-entidad-con-operaciones-crud-y-respuestas-json)
+  - [Añadir un sistema de validación propio a la API REST](#añadir-un-sistema-de-validación-propio-a-la-api-rest)
+    - [Crear un sistema para validar las reglas](#crear-un-sistema-para-validar-las-reglas)
+      - [Crear las reglas de validación](#crear-las-reglas-de-validación)
+    - [Crear una sistema para validar las peticiones](#crear-una-sistema-para-validar-las-peticiones)
+      - [Crear la validación de un modelo](#crear-la-validación-de-un-modelo)
+    - [Aplicar el modelo de validación a un proceso](#aplicar-el-modelo-de-validación-a-un-proceso)
 
 
 ## Que és
@@ -399,6 +405,7 @@ Router::group(['prefix'=>'api'],function():void{
 );
 ```
 Y ahora probamos en el navegador
+
 ![página de api json](img/apicontroller.png)
 
 
@@ -496,6 +503,7 @@ final class ApiController
 }
 ```
 En el navegador muestra
+
 ![página nueva api](img/json1.png)
 
 ## POSTMAN 
@@ -644,4 +652,239 @@ Para probar el funcionamiento en `Postman` creamos una nueva entrada, con los da
 
 ![ej crear producto](img/salidaCrear.png)
 
-:computer: Hoja07_API_01
+:computer: Hoja07_API_01 (ejercicio 1)
+
+## Añadir un sistema de validación propio a la API REST
+
+### Crear un sistema para validar las reglas
+
+Para  crear un sistema de reglas de validación en el directorio `src` crear un subdirectorio de reglas denominado `Rules` y dentro vamos a crear un archivo **AbstractRule** que contiene una clase abstracta que deben implementar el resto de reglas.
+```php
+declare(strict_types = 1);
+
+namespace App\Rules;
+
+abstract class AbstractRule{
+    protected string $message;
+
+    public function __construct(string $message=''){
+        $this->message=$message;
+    }
+
+    public function getMessage():string{
+        return $this->message;
+    }
+
+    abstract public function validate(mixed $value):bool;
+}
+
+```
+Tiene un atributo `message` que es el mensaje sobre la regla a validar y un método `validate` que es el que debe definir cada una de las reglas que se quiera validar.
+
+#### Crear las reglas de validación
+
+Por cada regla de validación que se quiera definir se crea dentro del directorio `src` y subdirectorio `Rules`  un archivo que contenga __la regla de validación__ que se quiera definir.
+En este ejemplo es la clase __RequiredRule__, que verifica si un campo es requerido o no.
+```php
+
+declare(strict_types = 1);
+
+namespace App\Rules;
+
+final class RequiredRule extends AbstractRule{
+    
+    public function validate(mixed $value):bool{
+        return !empty($value);
+    }
+
+}
+
+```
+:computer: Hoja07_API_01 (ejercicio 2)
+
+### Crear una sistema para validar las peticiones
+Para crear el sistema de peticiones en el directorio `src` crear un subdirectorio de reglas denominado `Request` y dentro vamos a crear un archivo **AbstractRequest** que contiene una clase abstracta  que define el patrón que tienen que cumplir los modelos de validación.
+
+```php
+declare(strict_types = 1);
+
+namespace App\Request;
+
+use App\Rules\AbstractRule;
+
+abstract class AbstractRequest{
+
+    //array de reglas contiene una clave por ejemplo el nombre,la descripcion 
+    // array de nuestras reglas definidas required, min
+
+    /**
+     * @var array<string, array<AbstractRule>>
+     */
+    protected array $rules=[];
+
+    // array de mensajes contiene un clave por ejemplo el nombre, la descripción
+    // y un array de los mensajes por cada clave
+
+    /**
+     * @var array<string, array<string>>
+     */
+
+    protected array $messages=[];
+
+    public function __construct(){
+        $this->rules=$this->rules();
+        $this->respond();
+    }
+    
+    /**
+     *  $return array<string,array<AbstracRule>>
+     */
+    abstract protected function rules():array;
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function validate(array $data): bool
+    {
+        $this->messages = [];
+
+        foreach ($this->rules as $field => $rules) {
+            foreach ($rules as $rule) {
+                if (! $rule->validate($data[$field])) {
+                    if (!isset($this->messages[$field])) {
+                        $this->messages[$field][] = $rule->getMessage();
+                    }
+                }
+            }
+        }
+
+        return empty($this->messages);
+    }
+
+    /**
+     * @return array<string, array<string>>
+     */
+    public function getMessages(): array
+    {
+        return $this->messages;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function validated(): array
+    {
+        $data = [];
+
+        foreach ($this->rules as $field => $rules) {
+            $data[$field] = input($field);
+        }
+
+        return $data;
+    }
+
+    protected function respond(): void
+    {
+        if ($this->validate(data: input()->all(array_keys($this->rules))) === false) {
+            $this->error();
+        }
+    }
+
+    protected function error(): void
+    {
+        response()
+            ->httpCode(code: 422)
+            ->json(value: [
+                'status' => 'error',
+                'errors' => $this->getMessages(),
+            ]);
+    }
+
+}
+
+```
+
+#### Crear la validación de un modelo
+
+El modelo de ejemplo basado en la interfaz definida **AbstractRequest** es el de `Productos` donde se define el método `rules` e indicamos las reglas de validación por cada campo definido en la tabla que se quiera validar.
+
+En este Ejemplo la clase definida **ProductoRequest**, se realizan las siguientes validaciones:
+* Con respecto al nombre, se valida que sea requerido, que debe tener al menos 3 caracteres y 255 como máximo y que el valor del campo debe ser único.
+* Con respecto a la descripción, se valida que sea requerido.
+* Con respecto al precio, se valida que sea requerido y que sea un campo numérico.
+```php
+declare(strict_types = 1);
+
+namespace App\Request;
+
+use App\Rules\{
+    MaxRule, MinRule, NumericRule, RequiredRule, UniqueRule,
+};
+
+final class ProductoRequest extends AbstractRequest
+{
+    public function __construct(private readonly ?int $id = null)
+    {
+        parent::__construct();
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'nombre' => [
+                new RequiredRule(message: 'El nombre es requerido'),
+                new MinRule(length: 3, message: 'El nombre debe tener como mínimo 3 caracteres'),
+                new MaxRule(length:255, message: 'El nombre debe tener como máximo 255 caracteres'),
+                new UniqueRule(table: 'productos', column: 'nombre', id: $this->id, message: 'El producto ya existe'),
+            ],
+            'descripcion' => [
+                new RequiredRule(message: 'La descripción es requerida'),
+            ],
+            'precio' => [
+                new RequiredRule(message: 'El precio es requerido'),
+                new NumericRule(message: 'El precio debe ser numérico'),
+            ],
+        ];
+    }
+}
+
+```
+
+### Aplicar el modelo de validación a un proceso
+
+El ejemplo es modificar el proceso de creación de un producto donde ahora vamos a validar antes de insertar que la información cumpla una serie de condiciones que han sido definidas en __ProductoRequest__ en el método __rules()__.  Tenemos que modificar el controlador que gestiona la creación del producto **CreateProductoController**
+
+```php
+declare(strict_types = 1);
+
+namespace App\Controllers\Api\Producto;
+
+use App\Entities\Producto;
+use App\Responses\JsonResponse;
+use App\Request\ProductoRequest;
+
+final class CreateProductoController
+{
+    public function __invoke(): void
+    {
+        $producto = new Producto();
+        $request = new ProductoRequest();
+
+        $productoId = $producto->create(
+         
+           data:$request->validated(),
+        );
+
+
+        JsonResponse::response(
+            data:$producto->find(id:(int) $productoId)
+        );
+    }
+}
+
+```
+Una prueba de validación es:
+
+![ej crear producto validado](img/salidaCrear2.png)
+
+:computer: Hoja07_API_01 (ejercicio 3)
