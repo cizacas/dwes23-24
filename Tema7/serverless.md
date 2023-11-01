@@ -119,9 +119,88 @@ Nos abre un puerto por donde probar
 
 ![nueva consola de pruebas](img/offline.png)
 
+#### Pasar y recoger parámetros en modo de segmento por la URL
+
+Para pasar parámetros por la url tenemos que realizar los siguientes cambios:
+* En el fichero **serveless.yml** añadimos a la url un parámetro
+
+```yml
+path: /hola-mundo/{name}
+```
+
+* En el fichero **handler.js**  recogemos el parámetro en el mensaje. Fijate en las comillas utilizadas `
+
+```js
+ message: `Hola ${event.pathParameters.name}`,
+```
+Para realizar la prueba primero parar con `ctrl+c` y luego lanzar de nuevo `serveless offline`
+
+#### Peticiones POST y parsear datos con querystring
+
+Para poder pasear los datos requerimos instalar
+
+```shell
+npm install --save querystring       
+
+```
+y configuramos para que utilice este paquete en el fichero **handler.js** añadiendo después de 'use strict'
+
+```js
+const queryString = require('querystring');
+```
+
+Un ejemplo de crear peticiones POST
+
+* En el fichero **serveless.yml** añadimos una nueva función con nombre `showUser`
+
+```yml
+ showUser:
+    handler: handler.showUser
+    events:
+      - httpApi:
+          path: /user
+          method: post
+```
+
+* En el fichero **handler.js**  creamos la función con nombre `showUser`
+  
+```js
+ module.exports.showUser = async (event) => {
+  const body = queryString.parse(event['body']);
+  return {
+    statusCode: 200,
+    body: JSON.stringify(
+      {
+        message: `Petición POST`,
+        input: `Hola ${body.name} ${body.lastname}`,
+      },
+      null,
+      2
+    ),
+  };
+};
+
+```
+Para realizar la prueba utilizamos POSTMAN
+La salida es:
+
+![con los parámetros](img/salidapost.png)
+
+Cuando nos funciona todo podemos enviar todo lo realizado de nuevo a  AWS volviendo a realizar  el comando `deploy`
+
+```shell
+serverless deploy
+```
+Ahora en AWS tendremos dos funciones con dos API Gateway 
+
+![con los parámetros](img/funciones.png)
 
 
+Si queremos **eliminar** de  AWS todo lo realizado  simplemente utilizar el comando `remove`
 
+```shell
+serverless remove
+```
 
 
 
