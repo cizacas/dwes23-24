@@ -201,7 +201,28 @@ Si queremos **eliminar** de  AWS todo lo realizado  simplemente utilizar el coma
 ```shell
 serverless remove
 ```
+#### Instalar y utilizar Serverless para ahorrar megas en cada subida a AWS
 
+Existe un plugin en github  [serverless-plugin-include-dependencies](https://github.com/dougmoscrop/serverless-plugin-include-dependencies) que nos permite ahorrar megas en cada subida a AWS 
+
+Se instala via npm
+```shell
+npm install serverless-plugin-include-dependencies --save-dev
+```
+Ahora en la sección de `plugins` de **serverless.yml** añadimos
+
+```yml
+plugins:
+  - serverless-plugin-include-dependencies
+```
+
+Y también dentro de `package` vamos a excluir el directorio node_modules
+
+```yml
+package:
+  patterns:
+    - '!node_modules/**' # no need to add this, this plugin does it for you
+```
 
 
 
