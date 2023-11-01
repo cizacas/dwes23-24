@@ -1,7 +1,7 @@
 ## Concepto
 Serverless, también conocido como "computación sin servidor", es un modelo de computación en la nube que permite a los desarrolladores ejecutar código sin preocuparse por la gestión directa de servidores. En lugar de provisionar y administrar servidores físicos o virtuales, los desarrolladores pueden enfocarse en escribir código y subirlo a una plataforma de servidor sin servidor.
 
-### Ejemplo
+### Ejemplo utilizando framework Serverless, AWS (Lambda y API gateway) y Node.js
 Vamos a realizar un ejemplo utilizando  el framework [Serveless](https://www.serverless.com/), AWS amazon web services (lambda y API gateway) y Node.js
 
 1 Instalar serveless
@@ -93,6 +93,34 @@ La salida es:
 Donde nos indica `la región` asignada y además de la `url` asignada.
 
 ![en amazon ha creado un punto](img/consolaapi.png)
+
+
+### Ejemplo desarrollando en modo Offline para evitar gastos en AWS
+
+En Github [Serveless plugins](https://github.com/serverless/plugins) y buscar [offline - serverless-offline](https://github.com/dherault/serverless-offline)
+Para instalar
+
+```shell
+npm init -y 
+npm install --save serverless-offline
+```
+Modificamos el fichero **serveless.yml** y añadimos después de `service`
+
+```yml
+plugins:
+  - serverless-offline
+```
+Ejecutamos
+
+```shell
+serverless offline
+```
+Nos abre un puerto por donde probar
+
+![nueva consola de pruebas](img/offline.png)
+
+
+
 
 
 
