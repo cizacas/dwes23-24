@@ -67,32 +67,36 @@ En la respuesta vemos que ahora en `input` aparece `Hola Mundo`
 
 ![ver la ejecución de la respuesta](img/respawshello1.png)
 
-También podemos pasarle __un objeto__ y modificar el fichero **handler.js** y en lugar de `event` poner `event.nombre`
-```js
-'use strict';
-
-module.exports.hello = async (event) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event.nombre,
-      },
-      null,
-      2
-    ),
-  };
-```
-
-```shell
-serverless deploy -f hello -s dev
-
-serverless invoke local -f hello -s dev -d '{"nombre":"carmen"}' 
-```
 **Utilizar API GATEWAY para obtener un punto de acceso a la función**
 
 Al usuario final no podemos decirle que ejecute una función Lambda, tenemos que darle un punto de acceso final y que al llamarlo se realice la ejecución.
-En el fichero **serverless.yml**  hay que indicar ser
+En el fichero **serverless.yml**  hay que indicar el punto de acceso, es importante respetar los espacios
+```yml
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - httpApi:
+          path: /hola-mundo
+          method: get
+```
+Crea automáticamente un punto de acceso utilizando la API GATEWAY de AWS
+
+```shell
+serverless deploy
+
+```
+La salida es:
+
+![ver la ejecución de la respuesta](img/respawshello2.png)
+
+Donde nos indica `la región` asignada y además de la `url` asignada.
+
+![en amazon ha creado un punto](img/consolaapi.png)
+
+
+
+
+
 
 
