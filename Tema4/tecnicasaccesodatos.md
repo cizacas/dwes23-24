@@ -8,6 +8,7 @@
   - [MySQLi](#mysqli)
   - [PHP Data Objects(PDO)](#php-data-objectspdo)
     - [PDO: establecimiento de conexiones](#pdo-establecimiento-de-conexiones)
+      - [Las variables figuren en un archivo .env](#las-variables-figuren-en-un-archivo-env)
     - [PDO: ejecución de consultas](#pdo-ejecución-de-consultas)
     - [PDO: transacciones](#pdo-transacciones)
     - [PDO: obtención y utilización de conjuntos de resultados](#pdo-obtención-y-utilización-de-conjuntos-de-resultados)
@@ -20,7 +21,7 @@
       - [catch](#catch)
       - [finally](#finally)
       - [throw](#throw)
-          - [Creando nuestras excepciones](#creando-nuestras-excepciones)
+        - [Creando nuestras excepciones](#creando-nuestras-excepciones)
 
 ## Acceso a bases de datos desde PHP
 
@@ -45,9 +46,9 @@ Mientras PDO ofrece un conjunto común de funciones, las extensiones nativas nor
 
 Ambas bases de datos incorporan múltiples motores de almacenamiento siendo alguno de ellos:
 
-**MyISAM** (**Aria** en MariaDB): motor que se utiliza por defecto. Muy rápido pero a cambio no contempla integridad referencial ni tablas transaccionales. 
+**MyISAM** (**Aria** en MariaDB):. Muy rápido pero a cambio no contempla integridad referencial ni tablas transaccionales. 
 
-**InnoDB** (**XtraDB** en MariaDB): es un poco más lento pero sí soporta tanto integridad referencial como tablas transaccionales.
+**InnoDB** (**XtraDB** en MariaDB):  motor que se utiliza por defecto, es un poco más lento pero sí soporta tanto integridad referencial como tablas transaccionales.
 
 ## MySQLi
 
@@ -92,7 +93,7 @@ Si se utiliza **el controlador para MySQL**, los parámetros específicos para u
 - **host**: nombre o dirección IP del servidor.
 - **port**: número de puerto TCP en el que escucha el servidor.
 - **dbname**: nombre de la base de datos.
-- **unix_socket**: socket de MySQL en sistemas Unix.
+- **unix_socket**: socket de MySQL en sistemas Linux.
 
 Para indicar que utilice codificación UTF-8 para los datos que se transmitan:
 
@@ -100,7 +101,84 @@ Para indicar que utilice codificación UTF-8 para los datos que se transmitan:
 $opciones = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"); 
 $dwes = new PDO('mysql:host=localhost;dbname=dwes', 'dwes', 'abc123.', $opciones);
 ```
-:computer: Hoja04_BBDD_01 (Ej 1,2,3)
+Ejemplo de conexión controlando las excepciones:
+
+```php 
+ try{
+     $connection= new PDO(
+        dsn: 'mysql:host=localhost;dbname=dwes;charset=utf8mb4',
+        username: 'dwes',
+        password:'abc123.',
+     )
+     echo 'Conexión establecida correctamente';
+ }catch (PDOException $e){
+    echo match($e->getCode()){
+        1049 => 'Base de datos no encontrada',
+        1045 => 'Acceso denegado',
+        2002 => 'Conexión rechazada',
+        default => 'Error desconocido',
+    };
+}
+```
+####  Las variables figuren en un archivo .env
+
+A través de la librería externa [phpdotenv](https://github.com/vlucas/phpdotenv) que nos permite definir un fichero `.env` para tener todas las variables de entorno definidas.
+
+Un ejemplo del archivo **.env** 
+
+```shell
+
+DB_DSN=mysql:host=localhost:3306;dbname=prueba;charset=utf8mb4
+DB_USERNAME=root
+DB_PASSWORD=
+```
+Un ejemplo de la clase de conexión
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+final class ConnectionPDODotenv
+{
+    private static ?PDO $connection = null;
+
+    final private function __construct() {}
+
+    final public static function getConnection(): ?PDO
+    {
+        try {
+            if ( ! self::$connection) {
+                self::$connection = new PDO(
+                    dsn: $_ENV['DB_DSN'],
+                    username: $_ENV['DB_USERNAME'],
+                    password: $_ENV['DB_PASSWORD'],
+                );
+            }
+        } catch (PDOException $e) {
+            echo match ($e->getCode()) {
+                1049 => 'Base de datos no encontrada',
+                1045 => 'Acceso denegado',
+                2002 => 'Conexión rechazada',
+                default => 'Error desconocido',
+            };
+        }
+
+        return self::$connection;
+    }
+}
+
+$connection = ConnectionPDODotenv::getConnection();
+
+if ($connection instanceof PDO)
+{
+    echo 'Conexión establecida correctamente';
+}
+
+``` 
+
+:computer: Hoja04_BBDD_01 (Ej 1,2,3,4)
 
 ### PDO: ejecución de consultas
 Hay que diferenciar entre las sentencias SQL que no devuelven datos, de aquellas que sí lo devuelven.
@@ -170,11 +248,11 @@ while ($registro = $resultado->fetch(PDO::FETCH_BOUND))
 	echo $campo1.": ".$campo2."<br />";
 } 
 ```
-:computer: Hoja04_BBDD_01(Ej 4,5,6 y 7)
+:computer: Hoja04_BBDD_01(Ej 5,6,7 y 8)
 
 ### PDO: consultas preparadas
 
-Para preparar la consulta se utiliza el **método prepare** de la clase PDO. Este método devuelve un objeto de la clase **PDOStatement**. Los parámetros se pueden marcar utilizando signos de interrogación como en MySQLi.
+Para preparar la consulta se utiliza el **método prepare** de la clase PDO. Este método devuelve un objeto de la clase **PDOStatement**. Los parámetros se pueden marcar utilizando signos de interrogación.
 
 ```php
 $consulta=$dwes->prepare('INSERT INTO tabla (campo1, campo2) VALUES (?, ?)');
@@ -197,7 +275,7 @@ Una vez preparada la consulta y enlazados los parámetros con sus valores, se ej
 ```php
 $consulta->execute();
 ```
-:computer: Hoja04_BBDD_01(Ej 8)
+:computer: Hoja04_BBDD_01(Ej 9)
 
 ## Errores y manejo de excepciones
 
@@ -255,7 +333,7 @@ try {
 }
 
 ```
-###### Creando nuestras excepciones
+##### Creando nuestras excepciones
 Ejemplo:
 ```php
 class InvalidProductException extends Exception {} // creo una nueva excepcion InvalidProductExcepcion
@@ -292,9 +370,9 @@ En este ejemplo saldrá por la excepción debido a que el nombre es price  y por
 
 PHP define una **clasificación de los errores** que se pueden producir en la ejecución de un programa y ofrece métodos para ajustar el tratamiento de los mismos. Para hacer referencia a cada uno de los niveles de error, PHP define una serie de **constantes**. 
 
-Cada nivel se identifica por una constante. Por ejemplo, la constante E_NOTICE hace referencia a avisos que pueden indicar un error al ejecutar el script, y la constante E_ERROR engloba errores fatales que provocan que se interrumpa forzosamente la ejecución.
+Cada nivel se identifica por una constante. Por ejemplo, la constante `E_NOTICE` hace referencia a avisos que pueden indicar un error al ejecutar el script, y la constante `E_ERROR` engloba errores fatales que provocan que se interrumpa forzosamente la ejecución.
 
-La configuración inicial de cómo se va a tratar cada error según su nivel se realiza en php.ini el fichero de configuración de PHP. 
+La configuración inicial de cómo se va a tratar cada error según su nivel se realiza en `php.ini` el fichero de configuración de PHP. 
 
 Entre los principales parámetros que puedes ajustar están:
 - **error_reporting**: indica qué tipos de errores se notificarán. Su valor se forma utilizando los operadores a nivel de bit para combinar las constantes anteriores. Su valor predeterminado es E_ALL & ~E_NOTICE que indica que se notifiquen todos los errores (E_ALL) salvo los avisos en tiempo de ejecución (E_NOTICE).
@@ -315,7 +393,7 @@ ini_set('error_log', __DIR__ . '/logs/php_errors.log'); // indico la ruta en don
 La clase PDO permite definir la fórmula que usará cuando se produzca un error, utilizando el atributo PDO::ATTR_ERRMODE. Las posibilidades son:
 
 - **PDO::ERRMODE_SILENT**: no se hace nada cuando ocurre un error. Es el comportamiento por defecto.
-- **PDO::ERRMODE_WARNING**: genera un error de tipo E_WARNING cuando se produce un error.
+- **PDO::ERRMODE_WARNING**: genera un error de tipo `E_WARNING` cuando se produce un error.
 - **PDO::ERRMODE_EXCEPTION**: cuando se produce un error lanza una excepción utilizando el manejador propio**PDOException**.
 
 Es decir, que si quieres utilizar excepciones con la extensión PDO, debes configurar la conexión haciendo:
@@ -337,6 +415,18 @@ catch (PDOException $p) {
 	echo "Error ".$p->getMessage()."<br />"; 
 }
 ```
+
+:computer: Hoja04_BBDD_02
+
+:computer: Hoja04_BBDD_03
+
+:computer: Hoja04_BBDD_04
+
+:computer: Hoja04_BBDD_05
+
+:computer: Hoja04_BBDD_06
+
+
 
 
 
