@@ -17,11 +17,11 @@
     - [¿Qué es un error?](#qué-es-un-error)
     - [¿Qué es una excepción?](#qué-es-una-excepción)
       - [¿Cómo se manejan las excepciones?](#cómo-se-manejan-las-excepciones)
-      - [try](#try)
-      - [catch](#catch)
-      - [finally](#finally)
-      - [throw](#throw)
-        - [Creando nuestras excepciones](#creando-nuestras-excepciones)
+        - [try](#try)
+        - [catch](#catch)
+        - [finally](#finally)
+        - [throw](#throw)
+      - [Creando nuestras excepciones](#creando-nuestras-excepciones)
 
 ## Acceso a bases de datos desde PHP
 
@@ -296,16 +296,16 @@ Las excepciones se manejan con la sentencia try/catch. La sentencia try/catch pe
 - Si una vez acabado el bloque try no se ha lanzado ninguna excepción, se continúa con la ejecución en la línea siguiente al bloque o bloques catch.
 
 
-#### try 
+##### try 
 La sentencia try define un bloque de código que se va a intentar ejecutar. Si se produce una excepción, el código que sigue a la sentencia try no se ejecuta y el intérprete PHP busca una sentencia catch que pueda manejar la excepción.
 
-#### catch
+##### catch
 La sentencia catch define un bloque de código que se va a ejecutar si se produce una excepción. La sentencia catch debe especificar el tipo de excepción que se va a manejar. Si se produce una excepción que no es del tipo especificado, la sentencia catch no se ejecuta y la excepción se propaga al siguiente bloque catch más externo.
 
-#### finally
+##### finally
 La sentencia finally define un bloque de código que se va a ejecutar siempre, independientemente de si se produce una excepción o no. La sentencia finally se ejecuta después de que se ejecuta el bloque try y después de que se ejecuta el bloque catch.
 
-#### throw
+##### throw
 La sentencia throw permite lanzar una excepción. La sentencia throw debe especificar el tipo de excepción que se va a lanzar. Si se lanza una excepción que no es del tipo especificado, la excepción se propaga al siguiente bloque catch más externo.
 
 Por ejemplo, para lanzar una excepción cuando se produce una división por cero podrías hacer: 
@@ -333,7 +333,7 @@ try {
 }
 
 ```
-##### Creando nuestras excepciones
+#### Creando nuestras excepciones
 Ejemplo:
 ```php
 class InvalidProductException extends Exception {} // creo una nueva excepcion InvalidProductExcepcion
