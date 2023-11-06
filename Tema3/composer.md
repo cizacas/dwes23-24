@@ -18,6 +18,7 @@
   - [Ejemplo de crear nuestros scripts](#ejemplo-de-crear-nuestros-scripts)
   - [Ejemplo de autocarga de los namespaces con PSR-4](#ejemplo-de-autocarga-de-los-namespaces-con-psr-4)
   - [Ejemplo autocarga de archivos independientes](#ejemplo-autocarga-de-archivos-independientes)
+  - [Ejemplo Cargar una libreria desde un directorio local](#ejemplo-cargar-una-libreria-desde-un-directorio-local)
   - [Comandos avanzados](#comandos-avanzados)
 
 ## Introducción
@@ -340,6 +341,28 @@ composer start
 y desde cualquier navegador 
 
 ![imagen de la página web](img/pagina3.png)
+
+## Ejemplo Cargar una libreria desde un directorio local
+
+Si previamente hemos descargado la libreria de github a un directorio local  y queremos que en un proyecto se utilice esa libreria local debemos modificar el fichero 
+__composer.json__ 
+
+```json
+ "repositories": [
+        {
+            "type": "path",
+            "url": "Libreria"
+        }
+    ],
+    "require":{
+        "hackzilla/password-generator": "^1.6"
+    }
+```
+En este caso hemos descargado la libreria externa en un directorio denominado `libreria` este directorio se encuentra dentro del proyecto definido  y en este caso para realizar la carga de la libreria hay que realizar un `composer update`
+
+```shell
+composer update
+```
 
 ## Comandos avanzados
 
