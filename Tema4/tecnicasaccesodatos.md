@@ -167,6 +167,7 @@ final class ConnectionPDODotenv
 
         return self::$connection;
     }
+     private function __clone() {}
 }
 
 $connection = ConnectionPDODotenv::getConnection();
