@@ -27,3 +27,7 @@ Apuntes de Desarrollo Web en Entorno Servidor del CFGS de Desarrollo de Aplicaci
 **5. UNIDAD 5. Desarrollo de aplicaciones web utilizando código embebido**
 
 [Apuntes de la Unidad 5.](Tema5/dawcodigoembebido.md)
+
+**6. UNIDAD 6. Generación dinámica de páginas web**
+
+[Apuntes de la Unidad 6.](Tema6/generacionDinamicaPaginasWeb.md)
