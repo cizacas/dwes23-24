@@ -7,10 +7,13 @@
     - [Funcionamiento MVC](#funcionamiento-mvc)
   - [Laravel](#laravel)
     - [Instalación](#instalación)
+      - [versiones para Laravel 10](#versiones-para-laravel-10)
     - [Patrón de Laravel](#patrón-de-laravel)
     - [Estructura de Laravel](#estructura-de-laravel)
+    - [Novedades laravel 10:carpeta lang](#novedades-laravel-10carpeta-lang)
     - [Funcionamiento básico](#funcionamiento-básico)
     - [Artisan](#artisan)
+      - [novedades en laravel 10: Prompts en todos los comandos](#novedades-en-laravel-10-prompts-en-todos-los-comandos)
     - [Rutas](#rutas)
     - [Controladores](#controladores)
       - [Crear un nuevo controlador](#crear-un-nuevo-controlador)
@@ -128,6 +131,9 @@ Características:
 * Utiliza un sistema de procesamiento de plantillas llamado __Blade__,  el cuál hace uso de la caché para darle mayor velocidad
 
 ### Instalación
+#### versiones para Laravel 10
+* php requerida a partir de PHP 8.1.0
+* Requiere Composer 2.2.0 o superior. 
 
 Para la utilización de Laravel en primer lugar necesitamos tener instalado
 lo siguiente:
@@ -147,36 +153,48 @@ lo siguiente:
   
 * La librería de laravel
   * Usando la terminal de GitBash vamos a la carpeta de publicación c:/xampp/htdocs y escribimos:
-    * composer global require laravel /installer
+ 
+  ```
+    composer global require laravel /installer
+  ```
   
-![instalar laravel](img/instalaravel1.png)
 
 Instala la última versión de Laravel;con el paso del tiempo conviene ir actualizando la version de Laravel con el comando: composer global update laravel/installer
 
 * comprobamos la versión del instalador de lavarel
-
-![version instalador laravel](img/instalaravel2.png)
-      
+  
+```
+laravel -V
+```
+       
 * Adicionalmente también es recomendable instalar Node.js. Se instala la herramienta NPM (Node Package Manager), herramienta que permite instalar librerías de JavaScript, como BootStrap o jQuery. [La página oficial de Node.js](https://nodejs.org/es/download).
     * comprobamos la versión de node.js instalada
-
-![version de node.js](img/instanodejs.png)
+```
+ node -v
+```
 
 Ahora podemos comprobar que todo lo instalado es correcto y que podemos crear nuestro primer proyecto de prueba en Laravel (lpruebas), aunque anteriormente ya estabamos posicionados en la carpeta de publicación del XAMPP hasta ahora no era necesario pero ahora sí.
 
-* laravel new lpruebas
+```
+ laravel new lpruebas
+```
 
-![comando para crear proyecto laravel](img/crearproyecto.png)
 
-También tenemos la opción de solo realizar en un paso la instalación de Laravel y la creación del proyecto, poniendo en la carpeta de publicación: 
+También tenemos la opción de solo realizar en un paso la instalación de Laravel y la creación del proyecto, poniendo en __la carpeta de publicación__: 
 
-* composer create-project laravel/laravel lpruebas
+```
+composer create-project laravel/laravel lpruebas
+
+composer create-project --prefer-dist laravel/laravel lpruebas
+
+```
+
 
 Entramos en la carpeta __public__  y comprobamos que se ha instalado correctamente
 
 ![pagina web de laravel](img/paginawebl.png)
 
-Como entorno de desarrollo vamos a utilizar Visual Studio code e instalar la extensión Laravel extension pack que a su vez nos instala 12 plugins.
+Como entorno de desarrollo vamos a utilizar __Visual Studio code__ e instalar la extensión Laravel extension pack que a su vez nos instala 12 plugins.
 
 ### Patrón de Laravel
 
@@ -200,6 +218,14 @@ Vamos a ver la estructura de nuestro proyecto, para así entender que hay dentro
   * __filesystems.php__ maneja discos internos en laravel: imágenes, videos,…
 * __database__
   * __migrations__ se crea la estructura para la BD,tablas...
+
+### Novedades laravel 10:carpeta lang
+En Laravel 10, el directorio lang que en versiones anteriores aparecía en la raíz del proyecto ya no se incluye por defecto, para que aparezca, es necesario ejecutar el siguiente comando:
+
+```
+artisan lang:publish
+```
+
 * __lang__ en esta carpeta se guardan archivos PHP que contienen arrays con los textos de nuestro sitio web en diferentes lenguajes; solo será necesario utilizarlo en caso de que se desee que la aplicación se pueda traducir
 * __public__ es la única carpeta a la que los usuarios de la  aplicación pueden acceder. Todas las peticiones y solicitudes a la aplicación pasan por esta carpeta, ya que en ella se encuentra el index.php, este archivo es el que inicia todo el  proceso de ejecución del framework. En este directorio también se alojan los archivos CSS, Javascript, imágenes y  otros archivos que se quieran hacer públicos.
 * __resources__
@@ -207,12 +233,12 @@ Vamos a ver la estructura de nuestro proyecto, para así entender que hay dentro
 * __routes__ las rutas. web.php es la más importante, aquí se definen las rutas para interpretar las solicitudes que el usuario hace al sistema
 * __storage__ discos internos de laravel. En esta carpeta almacena toda la información interna necesaria para la ejecución de la web, como los archivos de sesión, la caché, la compilación de las vistas, metainformación y logs del sistema.
 * __tests__ esta carpeta se utiliza para los ficheros con las pruebas automatizadas. Laravel incluye un sistema que facilita todo el proceso de pruebas con PHPUnit.
-* __vendor__ En esta carpeta se alojan todas las librerías que  conforman el framework y sus dependencias
-  
+* __vendor__ En esta carpeta se alojan todas las librerías que  conforman el framework y sus dependencias  
 Además, en la carpeta raíz también encontramos tres ficheros importantes que utilizaremos:
 * __.env__ se utiliza para almacenar los valores de configuración que son propios de la máquina o instalación actual, lo que nos permite cambiar fácilmente la configuración según la máquina en la que se instale y tener opciones distintas para producción, para distintos desarrolladores.
 * __composer.json__ este fichero es el utilizado por Composer para realizar la instalación de Laravel. En una instalación inicial únicamente se especificará la instalación de un paquete (el propio framework de laravel), pero podemos especificar la instalación de otras librerías o paquetes externos que añadan funcionalidad a Laravel.
 * __package.json__ en este fichero se encuentran algunas dependencias por parte cliente( Bootstrap o jQuery), y se encuentran preinstaladas en la carpeta node_modules.
+  
 Estos tres archivos no deben subirse a ningun repositorio(GitHub) incluir en el __.gitignore__, porque si importamos un proyecto en laravel, podemos regenerar las dependencias de PHP con __composer install__ y las dependencias de JavaScript con __npm install__, es decir, los archivos composer.json y package.json actúan como indice de dependencias de PHP y JavaScript, respectivamente.
 
 ### Funcionamiento básico
@@ -233,27 +259,69 @@ Laravel incluye un interfaz de línea de comandos (CLI,  Command line interface 
 Esta utilidad nos va a permitir realizar múltiples tareas necesarias durante el  proceso de desarrollo o despliegue a producción de una aplicación, por lo que nos facilitará y acelerará el trabajo.
 
 Para ver una lista de todas las opciones que incluye Artisan podemos ejecutar el siguiente  comando en una consola o terminal del sistema en la carpeta raíz de nuestro proyecto:
-__php artisan list__ (o php artisan)
 
+```
+php artisan list
+
+```
 vamos a la terminal de Visual Studio Code y ejecutamos
 
 ![listado comandos artisan](img/artisan.png)
 
+Para ver la información de nuestro proyecto podemos utilizar el comando:
+
+```
+php artisan about
+
+```
+
 Para ver un listado con todas las rutas que hemos definido en el fichero routes\web.php  podemos ejecutar el comando:
 
-__php artisan route:list__
+```
+php artisan route:list
+
+```
 
 Esto nos mostrará una tabla con el método, la dirección, la acción y los filtros definidos  para todas las rutas.
 
 A través de la __opción make__ podemos generar diferentes componentes de Laravel (controladores, modelos, filtros, etc.) como si fueran plantillas, esto nos ahorrará  mucho trabajo y podremos empezar a escribir directamente el contenido del  componente.Por ejemplo, para crear un nuevo controlador tendríamos que escribir:
 
-__php artisan make:controller TaskController__
+```
+php artisan make:controller TaskController
+
+```
 
 Dentro de Laravel, ya tenemos un servidor interno que haría la función de servidor web: 
 
-__php artisan serve__
+```
+php artisan serve
+```
 
 Esto pondrá en marcha un servidor en el puerto 8000; podremos acceder anuestro proyecto a través de la URL http://localhost:8000
+
+#### novedades en laravel 10: Prompts en todos los comandos
+
+```
+❯ artisan make:controller
+
+  What should the controller be named?
+❯ ProfileController
+
+  Which type of controller would you like: [empty]
+  empty ................................................................. 0
+  api ................................................................... 1
+  invokable ............................................................. 2
+  resource .............................................................. 3
+  singleton ............................................................. 4
+❯ singleton
+
+  What model should this singleton controller be for? [none]
+❯ User
+
+   INFO  Controller [app/Http/Controllers/ProfileController.php] created successfully.
+
+
+```
 
 ### Rutas
 
@@ -347,7 +415,8 @@ Esto nos permitirá separar mucho mejor el código y crear clases  (controladore
 
 Los controladores son el punto de entrada de las peticiones de los usuarios  y son los que deben contener toda la lógica asociada al procesamiento de  una petición, encargándose de realizar las consultas necesarias a la base  de datos, de preparar los datos y de llamar a la vista correspondiente con  dichos datos.
 
-Los controladores se almacenan en  ficheros PHP en la carpeta __App/Http/Controllers__ y normalmente se les añade el sufijo __Controller__.
+Los controladores se almacenan en ficheros PHP en la carpeta __App/Http/Controllers__ y normalmente se les añade el sufijo __Controller__.
+
 Ejemplo HomeController.php 
 ```php
 <?php
@@ -368,13 +437,17 @@ encuentra en la carpeta App/Http/Controllers.
 Se utiliza para centralizar toda la lógica que se vaya a utilizar de forma compartida por los controladores de nuestra aplicación.
 
 Una vez definido un controlador ya podemos asociarlo a una ruta. Para  esto tenemos que modificar el fichero de rutas web.php de la forma:
-
+```
 Route::get('/',HomeController::class) -> name('home');
+```
 
 #### Crear un nuevo controlador
 Para crear uno nuevo bien lo podemos hacer a mano y rellenar  nosotros todo el código, o podemos utilizar el siguiente comando de  Artisan que nos adelantará todo el trabajo:
 
-__php artisan make:controller EjemploController__
+```
+php artisan make:controller EjemploController
+
+```
 
 el comando artisan admite algunos parámetros adicionales más. Uno muy útil es el __paramétro -i__ que crea el controlador con un método llamado __invoke__, que se autoejecuta cuando es llamado desde algún proceso de enrutamiento. Dentro del método invoke, podemos definir la lógica de generar y obtener los datos que necesita una vista y renderizarla,  como es el ejemplo visto.
 
@@ -389,7 +462,9 @@ si creamos un controlador con __la opción -r__ en vez de -i, __creará un contr
 
 También podemos crear subcarpetas dentro de la carpeta Controllers para  organizarnos mejor. Pero a la hora de hacer referencia al controlador únicamente  se tendrá que hacer a través de su espacio de nombres.
 Por ejemplo para crear un controlador en app\Http\Controllers\Fotos\AdminController:
-__php artisan make:controller Fotos/AdminController__
+```php
+php artisan make:controller Fotos/AdminController
+```
 
 #### Generar una URL a una acción
 en el fichero de rutas se debe añadir un __name__ a la ruta:
@@ -783,7 +858,7 @@ public function InsertarConValidacion( CrearClienteRequest $request){
 :computer: Hoja06_MVC_06
 
 ### Base de datos
-Laravel facilita la configuración y el uso de diferentes tipos  de base de datos: MySQL,PostgreSQL, SQLite y SQL  Server.
+Laravel facilita la configuración y el uso de diferentes tipos  de base de datos: MySQL,PostgreSQL, SQLite y SQL Server.
 
 En el fichero de configuración __config/database.php__  tenemos que indicar todos los parámetros de acceso a  nuestras bases de datos y además especificar cuál es la  conexión que se utilizará por defecto.
 
