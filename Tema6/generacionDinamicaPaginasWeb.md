@@ -155,7 +155,7 @@ lo siguiente:
   * Usando la terminal de GitBash vamos a la carpeta de publicación c:/xampp/htdocs y escribimos:
  
   ```
-    composer global require laravel /installer
+    composer global require laravel/installer
   ```
   
 
@@ -167,7 +167,7 @@ Instala la última versión de Laravel;con el paso del tiempo conviene ir actual
 laravel -V
 ```
        
-* Adicionalmente también es recomendable instalar Node.js. Se instala la herramienta NPM (Node Package Manager), herramienta que permite instalar librerías de JavaScript, como BootStrap o jQuery. [La página oficial de Node.js](https://nodejs.org/es/download).
+* Adicionalmente también es recomendable instalar Node.js. Se instala la herramienta NPM (Node Package Manager), herramienta que permite instalar librerías de JavaScript, como BootStrap o jQuery. [La página oficial de Node.js](https://nodejs.org/en).
     * comprobamos la versión de node.js instalada
 ```
  node -v
@@ -188,7 +188,6 @@ composer create-project laravel/laravel lpruebas
 composer create-project --prefer-dist laravel/laravel lpruebas
 
 ```
-
 
 Entramos en la carpeta __public__  y comprobamos que se ha instalado correctamente
 

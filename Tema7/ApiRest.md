@@ -541,7 +541,7 @@ DB_PASSWORD=
 ```
 A continuación , creamos dentro del directorio `src` un subdirectorio `services` que contiene el fichero **DBConnection.php**, que realiza la conexión con la BD e utiliza las variables de entorno para crear que por medio de PDO realice la conexión a la base de datos
 
-También, creamos dentro del directorio `src` un subdirectorio `Entities` donde creamenos el fichero **Producto.php**, que  es la clase de productos que tiene los métodos requeridos para realizar las siguientes tareas:
+También, creamos dentro del directorio `src` un subdirectorio `Entities` donde crearemos el fichero **Producto.php**, que  es la clase de productos que tiene los métodos requeridos para realizar las siguientes tareas:
 * Crear la tabla productos siempre que no exista en la base de datos, los campos será un id clave primaria y autoincrementada, nombre de 50 caracteres no nulo, la descripción con 255 caracteres no nulo, precio con 8 enteros y 2 decimales y created_at que por defecto contiene CURRENT_TIMESTAMP
 * El método create que realiza la inserción del producto en la base de datos, que recibe por parámetro el array con los datos del producto que retorna un true o false de la operación
 * El método get que devuelve el array de todos los productos
