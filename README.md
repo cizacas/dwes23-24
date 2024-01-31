@@ -31,3 +31,7 @@ Apuntes de Desarrollo Web en Entorno Servidor del CFGS de Desarrollo de Aplicaci
 **6. UNIDAD 6. Generación dinámica de páginas web**
 
 [Apuntes de la Unidad 6.](Tema6/generacionDinamicaPaginasWeb.md)
+
+**7. UNIDAD 7. Programación de servicios web**
+
+[Apuntes de la Unidad 7.](Tema7/programacionServiciosWeb.md)
