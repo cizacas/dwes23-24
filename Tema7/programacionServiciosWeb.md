@@ -746,6 +746,7 @@ Para probar el funcionamiento en `Postman` creamos una nueva entrada, con los da
 #### Crear un sistema para validar las reglas
 
 Para  crear un sistema de reglas de validación en el directorio `src` crear un subdirectorio de reglas denominado `Rules` y dentro vamos a crear un archivo **AbstractRule** que contiene una clase abstracta que deben implementar el resto de reglas.
+
 ```php
 declare(strict_types = 1);
 
@@ -772,6 +773,7 @@ Tiene un atributo `message` que es el mensaje sobre la regla a validar y un mét
 
 Por cada regla de validación que se quiera definir se crea dentro del directorio `src` y subdirectorio `Rules`  un archivo que contenga __la regla de validación__ que se quiera definir.
 En este ejemplo es la clase __RequiredRule__, que verifica si un campo es requerido o no.
+
 ```php
 
 declare(strict_types = 1);
@@ -899,6 +901,8 @@ En este Ejemplo la clase definida **ProductoRequest**, se realizan las siguiente
 * Con respecto al nombre, se valida que sea requerido, que debe tener al menos 3 caracteres y 255 como máximo y que el valor del campo debe ser único.
 * Con respecto a la descripción, se valida que sea requerido.
 * Con respecto al precio, se valida que sea requerido y que sea un campo numérico.
+
+
 ```php
 declare(strict_types = 1);
 
