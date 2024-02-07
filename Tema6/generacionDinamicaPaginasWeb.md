@@ -222,7 +222,7 @@ Vamos a ver la estructura de nuestro proyecto, para así entender que hay dentro
 En Laravel 10, el directorio lang que en versiones anteriores aparecía en la raíz del proyecto ya no se incluye por defecto, para que aparezca, es necesario ejecutar el siguiente comando:
 
 ```
-artisan lang:publish
+php artisan lang:publish
 ```
 
 * __lang__ en esta carpeta se guardan archivos PHP que contienen arrays con los textos de nuestro sitio web en diferentes lenguajes; solo será necesario utilizarlo en caso de que se desee que la aplicación se pueda traducir
@@ -782,7 +782,7 @@ public function insertar(Request $request){
         ]);
 }
 ```
-Las reglas de validacion se pueden consultar [enlace](https://laravel.com/docs/9.x/validation#available-validation-rules)
+Las reglas de validacion se pueden consultar [enlace](https://laravel.com/docs/10.x/validation#available-validation-rules)
 
 #### Form Request para validaciones más complejas
 Existe otra alternativa para validaciones más complejas, de forma que así evitamos poner más codigo en los controladores y organizamos mejor el código. Se trarta de los form request, una clase adicional que contiene toda la lógica de validación. Los creamos con el comando php artisan
@@ -1175,8 +1175,6 @@ Para obtener el identificador asignado en la base de datos después de guardar, 
 ```php
 $insertedId = $user->id;
 ```
-<div class="page"/>
-
 ##### Actualizar datos
 Para actualizar una instancia de un modelo sólo tendremos que recuperar la instancia  que queremos actualizar, a continuación modificarla y por último guardar los datos:
 ```php
@@ -1648,4 +1646,5 @@ Route::get('profile’, [ProfileController::class,’show’])->middleware('auth
 
 :computer: Hoja06_MVC_13
 
+:computer: Hoja06_MVC_14
 

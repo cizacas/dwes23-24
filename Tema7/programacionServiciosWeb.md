@@ -713,6 +713,7 @@ final class CreateProductoController
 ```
 Hay que modificar el fichero que contiene las rutas  denominado **api.php**
 
+```php
 declare(strict_types = 1);
 use Pecee\SimpleRouter\SimpleRouter as Router;
 use App\Controllers\Api\ApiController;
@@ -720,7 +721,6 @@ use App\Controllers\Api\Producto\CreateProductoController;
 
 //añadimos un nuevo grupo con el prefijo productos e indicamos el espacio de nombres
 
-```php
 Router::group(
     ['prefix' => 'api'],
     function (): void {
