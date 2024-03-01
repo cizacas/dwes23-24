@@ -307,9 +307,9 @@ A partir de ahora, si vuelves a acceder con el usuario administrador, verás que
 
 ## Módulos adicionales que gestionan roles y permisos en Laravel
 
-[Laratrust](https://laratrust.santigarcor.me/)
+* [Laratrust](https://laratrust.santigarcor.me/)
 
-[Spatie](https://spatie.be)
+* [Spatie](https://spatie.be)
 
 
 
