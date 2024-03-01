@@ -1376,6 +1376,7 @@ class UserController extends Controller
     }
 }
 ```
+
 ### Ficheros de entrada
 
 Laravel facilita una serie de clases para trabajar con los ficheros de entrada. 
