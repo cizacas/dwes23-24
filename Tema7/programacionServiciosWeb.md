@@ -26,7 +26,7 @@
       - [Aplicar el modelo de validación a un proceso](#aplicar-el-modelo-de-validación-a-un-proceso)
   - [Servicios web REST](#servicios-web-rest)
     - [Cliente](#cliente)
-    - [Servidor](#servidor)
+    - [Servidor Laravel](#servidor-laravel)
 
 ## Introducción
 En ocasiones, las aplicaciones que desarrolles necesitarán compartir información con otras aplicaciones o puede ser que, una vez que esté finalizada y funcionando, quieras programar una nueva aplicación (y no necesariamente una aplicación web)
@@ -994,7 +994,8 @@ REST es más liviano en peso y mucho más rápido en su procesamiento que SOAP.
 ![servicio rest](img/rest.png)
 
 ### Cliente
-Para obtener los datos del un servicio web REST se utiliza la [__librería cURL__](https://www.php.net/manual/es/book.curl.php). Es una biblioteca que permite conectarse y comunicarse con diferentes tipos de servidores y diferentes tipos de protocolos.
+Para obtener los datos del un servicio web REST se utiliza la [__librería cURL__](https://www.php.net/manual/es/book.curl.php). Es una biblioteca que permite conectarse y comunicarse con diferentes tipos de servidores y diferentes tipos de protocolos:http, https, ftp, gopher, telnet, dict, file y ldap. cURL se utiliza a diario en líneas de comando o scripts para transferir datos.
+
 
 Un ejemplo de una petición GET podría ser la siguiente:
 ```php
@@ -1004,14 +1005,30 @@ Un ejemplo de una petición GET podría ser la siguiente:
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $respuesta_curl = curl_exec($curl);
-    curl_close($curl);
-	
-    $respuesta_decodificada = json_decode($respuesta_curl);
+    curl_close($curl);	
 ```
+* **curl_init**: Inicia una nueva sesión y devuelve el manipulador cURL para el uso de las funciones curl_setopt(), curl_exec(), y curl_close().
+* **curl_setopt**: Establece una opción en la sesión del recurso cURL, opcionalmente podemos utilizar curl_setopt_array para configurar múltiples opciones.
+* **curl_exec**: Ejecuta la sesión cURL que se le pasa como parámetro. Esta función debe llamarse después de inicializar una sesión cURL y todas las opciones para la sesión están establecidas.
+* **curl_close**: Cierra una sesión cURL y libera todos sus recursos. El recurso cURL, $curl, también es eliminado.
 
-### Servidor
+Algunas opciones de configuración de **curl_setopt**:
 
-La idea es generar una página que devuelva una respuesta en formato JSON.
+Tiene tres parámetros:
+* El recurso cURL devuelto por el curl_init();
+* La opción CURLOPT_xxx a configurar
+* valor a configurar de la opción
+
+* **CURLOPT_RETURNTRANSFER**: true para devolver el resultado de la transferencia como string del valor de curl_exec() en lugar de mostrarlo directamente.
+* **CURLOPT_CUSTOMREQUEST**: Esta opción es muy importante, en este caso nos permite sobrescribir el verbo HTTP utilizado para enviar una petición GET/PUT/POST/DELETE....
+Hay una opción especifica para post
+  *  **CURLOPT_POST**: true para hacer un HTTP POST normal. Este POST del tipo application/x-www-form-urlencoded, el más común en formularios HTML.
+* **CURLOPT_POSTFIELDS**: Los campos que deseamos enviar en la petición POST
+
+Este cliente puede ser utilizado en vez de PostMan para obtener la respuesta, para ver esa respuesta como devuelve un array de datos tendremos que realizar un __var_dump()__ para ver dicha respuesta o bien no introducir la opción CURLOPT_RETURNTRANSFER
+
+### Servidor Laravel
+En este caso en vez de crearnos toda una estructura desde cero, la idea es generar una página que devuelva una respuesta en formato JSON utilizando **Laravel** como servidor.
 Para ello se puede utilizar el método __json__ de Laravel. 
 Se crea un __controlador__ específico y las __rutas__ correspondientes.
 Luego, en el controlador se hacen los __métodos__ necesarios para realizar todas las operaciones del servicio web.
