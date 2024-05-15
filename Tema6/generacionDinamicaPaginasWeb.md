@@ -1463,12 +1463,7 @@ En el archivo de configuración situado en __config/jetstream.php__ podremos añ
 * Features::api() //Crear una API para crear, leer, actualizer y eliminar usuarios
 * Features::teams() //Creación de equipos. Un usuario puede pertenecer a uno o varios [equipos](https://jetstream.laravel.com/2.x/features/teams.html)
 
- Si usamos __Livewire__ podemos publicar los componentes de Blade
-
-```php
-php artisan vendor:publish --tag=jetstream-views
-```
-Esto hará que se publique en __resources/views/vendor/jetstream/components__ todos los componentes ya desarrollados. Luego podremos modificar toda la “vista” de Jetstream.
+ Si usamos __Livewire__  en __resources/views/vendor/jetstream/components__ figuran todos los componentes desarrollados. Luego podremos modificar toda las “vistas” de Jetstream.
 
 #### Registro de un usuario
 Si accedemos a la ruta register	nos	aparecerá la vista con el formulario de registro.
