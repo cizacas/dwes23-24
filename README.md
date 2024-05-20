@@ -32,6 +32,8 @@ Apuntes de Desarrollo Web en Entorno Servidor del CFGS de Desarrollo de Aplicaci
 
 [Apuntes de la Unidad 6.](Tema6/generacionDinamicaPaginasWeb.md)
 
+[Información sesiones](Tema6/otrosTemasLaravel.md)
+
 **7. UNIDAD 7. Programación de servicios web**
 
 [Apuntes de la Unidad 7.](Tema7/programacionServiciosWeb.md)
