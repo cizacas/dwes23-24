@@ -37,3 +37,8 @@ Apuntes de Desarrollo Web en Entorno Servidor del CFGS de Desarrollo de Aplicaci
 **7. UNIDAD 7. Programación de servicios web**
 
 [Apuntes de la Unidad 7.](Tema7/programacionServiciosWeb.md)
+
+**8. UNIDAD 8-9. Generación de páginas web interactivas y aplicaciones web híbridas**
+
+[Apuntes de la Unidad 8-9.](Tema8-9/Apuntes.md)
+
